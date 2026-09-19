@@ -1,0 +1,42 @@
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.editorconfig
+
+# Environment
+.env
+.env.backup
+.env.production
+*.log
+
+# Dependencies
+/vendor/
+backend-cbt/vendor/
+!backend-cbt/resources/views/vendor/
+**/node_modules/
+
+# Databases
+*.sqlite
+*.sqlite-journal
+
+# Tests & Coverage
+.phpunit.result.cache
+.phpunit.cache/
+playwright-report/
+test-results/
+
+# Laravel Storage & Framework Caches
+backend-cbt/storage/*.key
+backend-cbt/storage/pail/
+backend-cbt/public/hot
+backend-cbt/public/storage
+
+# AI & Agent local folders
+.agents/
+.claude/
+.factory/
+.grok/
+.impeccable/
+skills/
