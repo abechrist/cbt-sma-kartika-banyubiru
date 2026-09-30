@@ -44,25 +44,61 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-4 sm:gap-6">
-                        <div class="text-center">
-                            <p class="text-2xl font-extrabold text-emerald-600 font-mono leading-none">{{ $session->attempts->where('status', 'in_progress')->count() }}</p>
-                            <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-1">Mengerjakan</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-2xl font-extrabold text-brand-800 font-mono leading-none">{{ $session->attempts->whereIn('status', ['submitted', 'auto_submitted'])->count() }}</p>
-                            <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-1">Selesai</p>
+                    <div class="w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-between sm:justify-end gap-3 sm:gap-6 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-200/80">
+                        <div class="flex items-center justify-around sm:justify-start gap-6">
+                            <div class="text-center">
+                                <p class="text-2xl font-extrabold text-emerald-600 font-mono leading-none">{{ $session->attempts->where('status', 'in_progress')->count() }}</p>
+                                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-1">Mengerjakan</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-2xl font-extrabold text-brand-800 font-mono leading-none">{{ $session->attempts->whereIn('status', ['submitted', 'auto_submitted'])->count() }}</p>
+                                <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-1">Selesai</p>
+                            </div>
                         </div>
                         <a href="{{ route('monitoring.session', $session) }}" 
-                            class="px-4 py-2.5 rounded-xl bg-gold-500 hover:bg-gold-600 text-white font-bold text-xs shadow-xs transition flex items-center gap-1.5">
+                            class="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl bg-gold-500 hover:bg-gold-600 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5">
                             <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
                             Monitor Real-Time →
                         </a>
                     </div>
                 </div>
 
-                <!-- Participants Preview Table -->
-                <div class="p-2 sm:p-4">
+                <!-- Mobile Participants Cards (Stacked & responsive on 360px) -->
+                <div class="block md:hidden divide-y divide-slate-100 p-3">
+                    @forelse($session->attempts as $attempt)
+                    <div class="p-3.5 rounded-xl hover:bg-slate-50 transition">
+                        <div class="flex items-start justify-between gap-2 mb-2">
+                            <div>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-xs font-mono font-bold text-slate-400">#{{ $loop->iteration }}</span>
+                                    <span class="font-bold text-sm text-slate-900">{{ $attempt->user->name }}</span>
+                                </div>
+                                <span class="text-[11px] text-slate-500 font-mono">Mulai: {{ $attempt->started_at?->format('H:i:s') ?? '-' }} WIB</span>
+                            </div>
+                            <span @class([
+                                'px-2.5 py-0.5 text-xs font-bold rounded-full border shrink-0',
+                                'bg-emerald-100 text-emerald-800 border-emerald-200' => $attempt->status === 'in_progress',
+                                'bg-brand-100 text-brand-800 border-brand-200' => in_array($attempt->status, ['submitted', 'auto_submitted']),
+                                'bg-slate-100 text-slate-700 border-slate-200' => !in_array($attempt->status, ['in_progress', 'submitted', 'auto_submitted']),
+                            ])>
+                                {{ $attempt->status === 'in_progress' ? 'Mengerjakan' : ($attempt->status === 'submitted' ? 'Selesai' : $attempt->status) }}
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-3 mt-2 pt-2 border-t border-slate-100">
+                            <span class="text-xs font-medium text-slate-500">Progress:</span>
+                            <div class="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200">
+                                <div class="bg-brand-700 h-full rounded-full" style="width: {{ $attempt->getProgressPercentage() }}%"></div>
+                            </div>
+                            <span class="text-xs font-mono font-bold text-slate-700">{{ round($attempt->getProgressPercentage()) }}%</span>
+                        </div>
+                    </div>
+                    @empty
+                    <div class="p-6 text-center text-slate-400 text-xs">Belum ada peserta yang memulai sesi ini.</div>
+                    @endforelse
+                </div>
+
+                <!-- Desktop Participants Table -->
+                <div class="hidden md:block p-2 sm:p-4">
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-slate-200 text-sm">
                             <thead class="bg-slate-50 text-slate-600 text-xs uppercase font-semibold">
@@ -80,13 +116,12 @@
                                     <td class="px-4 py-3 text-slate-400 font-mono text-xs">{{ $loop->iteration }}</td>
                                     <td class="px-4 py-3 font-semibold text-slate-900">{{ $attempt->user->name }}</td>
                                     <td class="px-4 py-3">
-                                        <span class="px-2.5 py-0.5 text-xs font-bold rounded-full border
-                                            @switch($attempt->status)
-                                                @case('in_progress') bg-emerald-100 text-emerald-800 border-emerald-200 @break
-                                                @case('submitted') @case('auto_submitted') bg-brand-100 text-brand-800 border-brand-200 @break
-                                                @default bg-slate-100 text-slate-700 border-slate-200
-                                            @endswitch
-                                        ">{{ $attempt->status }}</span>
+                                        <span @class([
+                                            'px-2.5 py-0.5 text-xs font-bold rounded-full border',
+                                            'bg-emerald-100 text-emerald-800 border-emerald-200' => $attempt->status === 'in_progress',
+                                            'bg-brand-100 text-brand-800 border-brand-200' => in_array($attempt->status, ['submitted', 'auto_submitted']),
+                                            'bg-slate-100 text-slate-700 border-slate-200' => !in_array($attempt->status, ['in_progress', 'submitted', 'auto_submitted']),
+                                        ])>{{ $attempt->status }}</span>
                                     </td>
                                     <td class="px-4 py-3">
                                         <div class="flex items-center gap-2">

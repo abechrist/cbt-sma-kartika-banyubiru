@@ -131,7 +131,11 @@
                         </td>
                         <td class="px-6 py-4 font-mono font-bold text-slate-800 whitespace-nowrap">{{ $question->score }} pts</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="inline-flex items-center px-2.5 py-0.5 text-[11px] font-bold rounded-full border whitespace-nowrap {{ $question->is_active ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-slate-100 text-slate-700 border-slate-200' }}">
+                            <span @class([
+                                'inline-flex items-center px-2.5 py-0.5 text-[11px] font-bold rounded-full border whitespace-nowrap',
+                                'bg-emerald-50 text-emerald-800 border-emerald-200' => $question->is_active,
+                                'bg-slate-100 text-slate-700 border-slate-200' => !$question->is_active,
+                            ])>
                                 {{ $question->is_active ? 'Aktif' : 'Nonaktif' }}
                             </span>
                         </td>

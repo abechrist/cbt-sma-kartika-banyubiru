@@ -198,26 +198,26 @@ function LiveMonitoring({ initialParticipants, sessionId, examQuestionsCount }) 
             )}
 
             <div className="bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
-                <div className="p-5 border-b border-slate-200 bg-slate-50/80 flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex items-center gap-6">
-                        <div className="text-center">
-                            <p className="text-2xl font-extrabold font-mono text-slate-900">{total}</p>
+                <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50/80 flex flex-wrap items-center justify-between gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-6 w-full sm:w-auto">
+                        <div className="text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-xl border sm:border-0 border-slate-200/80">
+                            <p className="text-2xl font-extrabold font-mono text-slate-900 leading-tight">{total}</p>
                             <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">Total</p>
                         </div>
-                        <div className="text-center">
-                            <p className="text-2xl font-extrabold font-mono text-emerald-600">{online}</p>
+                        <div className="text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-xl border sm:border-0 border-slate-200/80">
+                            <p className="text-2xl font-extrabold font-mono text-emerald-600 leading-tight">{online}</p>
                             <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">Online</p>
                         </div>
-                        <div className="text-center">
-                            <p className="text-2xl font-extrabold font-mono text-brand-800">{inProgress}</p>
+                        <div className="text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-xl border sm:border-0 border-slate-200/80">
+                            <p className="text-2xl font-extrabold font-mono text-brand-800 leading-tight">{inProgress}</p>
                             <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">Mengerjakan</p>
                         </div>
-                        <div className="text-center">
-                            <p className="text-2xl font-extrabold font-mono text-blue-600">{done}</p>
+                        <div className="text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-xl border sm:border-0 border-slate-200/80">
+                            <p className="text-2xl font-extrabold font-mono text-blue-600 leading-tight">{done}</p>
                             <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">Selesai</p>
                         </div>
-                        <div className="text-center">
-                            <p className={`text-2xl font-extrabold font-mono ${suspicious > 0 ? 'text-rose-600' : 'text-slate-400'}`}>{suspicious}</p>
+                        <div className="col-span-2 sm:col-span-1 text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-xl border sm:border-0 border-slate-200/80">
+                            <p className={`text-2xl font-extrabold font-mono leading-tight ${suspicious > 0 ? 'text-rose-600' : 'text-slate-400'}`}>{suspicious}</p>
                             <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">⚠ Indikator</p>
                         </div>
                     </div>
@@ -227,7 +227,65 @@ function LiveMonitoring({ initialParticipants, sessionId, examQuestionsCount }) 
                     </span>
                 </div>
 
-                <div className="overflow-x-auto">
+                {/* Mobile Participant Cards (Stacked & responsive on 360px) */}
+                <div className="block md:hidden divide-y divide-slate-100 p-3">
+                    {participants.length === 0 ? (
+                        <div className="p-6 text-center text-slate-400 text-xs">
+                            Belum ada peserta. Menunggu siswa masuk ke sesi ini…
+                        </div>
+                    ) : (
+                        participants.map((p, i) => (
+                            <div key={p.attempt_id} className={`p-3.5 rounded-2xl mb-2.5 border transition ${isOnline(p) ? 'bg-white border-slate-200 shadow-2xs' : 'bg-rose-50/50 border-rose-200'}`}>
+                                <div className="flex items-start justify-between gap-2 mb-2">
+                                    <div className="min-w-0">
+                                        <div className="flex items-center gap-1.5 flex-wrap">
+                                            <span className="text-xs font-mono font-bold text-slate-400">#{i + 1}</span>
+                                            <span className="font-bold text-sm text-slate-900 truncate">{p.student_name}</span>
+                                            {(p.suspicious_flags ?? 0) > 0 && (
+                                                <span className="px-2 py-0.5 text-[10px] font-bold bg-rose-100 text-rose-800 rounded-full border border-rose-200">
+                                                    ⚠ {p.suspicious_flags}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500 font-mono">
+                                            <span>Mulai: {p.started_at ? new Date(p.started_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}</span>
+                                            <span>•</span>
+                                            <span>Sisa: <strong className="text-slate-800 font-bold">{timeLeft(p) ?? '-'}</strong></span>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col items-end gap-1 shrink-0">
+                                        <span className={`px-2 py-0.5 text-xs rounded-full ${STATUS_COLORS[p.status] ?? 'bg-gray-100 text-gray-800'}`}>
+                                            {STATUS_LABELS[p.status] ?? p.status}
+                                        </span>
+                                        {p.status === 'in_progress' && (
+                                            <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded ${isOnline(p) ? 'text-emerald-700 bg-emerald-50' : 'text-rose-700 bg-rose-50'}`}>
+                                                {isOnline(p) ? '● Online' : '○ Terputus'}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-3">
+                                    <div className="flex-1 flex items-center gap-2">
+                                        <div className="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200">
+                                            <div className="bg-brand-700 h-2 rounded-full" style={{ width: `${p.progress}%` }} />
+                                        </div>
+                                        <span className="text-xs font-mono font-bold text-slate-700">{Math.round(p.progress)}%</span>
+                                        <span className="text-[11px] font-mono text-slate-400">({p.answers_count}/{examQuestionsCount})</span>
+                                    </div>
+                                    {p.status !== 'not_started' && (
+                                        <form action={`/monitoring/${p.attempt_id}/reset`} method="POST" onSubmit={() => confirm('Reset percobaan ini?')}>
+                                            <input type="hidden" name="_token" value={window.__CSRF__} />
+                                            <button type="submit" className="min-h-[36px] px-3 py-1 text-rose-600 hover:text-rose-800 font-bold text-xs rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 transition">Reset</button>
+                                        </form>
+                                    )}
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+
+                {/* Desktop Table View */}
+                <div className="hidden md:block overflow-x-auto">
                     <table className="min-w-full divide-y divide-slate-200 text-sm">
                         <thead className="bg-gray-50">
                             <tr>

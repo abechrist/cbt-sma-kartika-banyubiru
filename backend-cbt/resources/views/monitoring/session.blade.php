@@ -109,7 +109,7 @@
 
     <!-- Activity and Incident Logs Section -->
     <div class="mt-8 bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
-        <div class="p-5 border-b border-slate-200 bg-slate-50/70 flex items-center justify-between">
+        <div class="p-4 sm:p-5 border-b border-slate-200 bg-slate-50/70 flex flex-wrap items-center justify-between gap-2">
             <div>
                 <h3 class="font-bold text-slate-900 text-sm tracking-tight">Log Kejadian &amp; Aktivitas Peserta</h3>
                 <p class="text-xs text-slate-500">Pencatatan pelanggaran tab, blur jendela, dan re-koneksi jaringan</p>
@@ -120,17 +120,21 @@
         </div>
         <div class="divide-y divide-slate-100 max-h-96 overflow-y-auto text-sm">
             @forelse($activityLogs as $log)
-            <div class="px-5 py-3 flex items-start gap-3 hover:bg-slate-50/60 transition">
+            <div class="px-4 sm:px-5 py-3 flex items-start gap-3 hover:bg-slate-50/60 transition">
                 <span class="mt-1.5 w-2 h-2 rounded-full shrink-0 {{ $log->action === 'suspicious_activity' ? 'bg-rose-500 ring-2 ring-rose-300' : 'bg-brand-600' }}"></span>
-                <div class="flex-1">
-                    <div class="flex items-center gap-2">
+                <div class="flex-1 min-w-0">
+                    <div class="flex flex-wrap items-center gap-2">
                         <span class="font-bold text-slate-900 text-xs">{{ $log->attempt?->user?->name ?? 'Sistem' }}</span>
-                        <span class="px-2 py-0.5 text-[10px] font-bold rounded-md uppercase font-mono tracking-wider @if($log->action === 'suspicious_activity') bg-rose-100 text-rose-800 @else bg-slate-100 text-slate-700 @endif">
+                        <span @class([
+                            'px-2 py-0.5 text-[10px] font-bold rounded-md uppercase font-mono tracking-wider',
+                            'bg-rose-100 text-rose-800' => $log->action === 'suspicious_activity',
+                            'bg-slate-100 text-slate-700' => $log->action !== 'suspicious_activity',
+                        ])>
                             {{ $log->action }}
                         </span>
                         <span class="text-[11px] font-mono text-slate-400 ml-auto">{{ $log->created_at?->format('H:i:s') }} WIB</span>
                     </div>
-                    <p class="text-xs text-slate-600 mt-1">{{ $log->description }}</p>
+                    <p class="text-xs text-slate-600 mt-1 break-words">{{ $log->description }}</p>
                 </div>
             </div>
             @empty

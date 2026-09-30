@@ -16,7 +16,7 @@
 
                 @if(in_array(auth()->user()->role?->name, ['super_admin', 'admin', 'guru']))
                 <button onclick="document.getElementById('modalNewCourse').classList.remove('hidden')" 
-                    class="px-5 py-2.5 rounded-xl bg-gold-400 hover:bg-gold-500 text-brand-950 font-black text-sm tracking-wide transition shadow-lg flex items-center gap-2 shrink-0 border border-gold-300 hover:scale-[1.02] active:scale-[0.98]">
+                    class="w-full md:w-auto min-h-[44px] px-5 py-2.5 rounded-xl bg-gold-400 hover:bg-gold-500 text-brand-950 font-black text-sm tracking-wide transition shadow-lg flex items-center justify-center gap-2 shrink-0 border border-gold-300 hover:scale-[1.02] active:scale-[0.98]">
                     <svg class="w-4 h-4 text-brand-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                     <span>+ Buka Kelas Ajar Baru</span>
                 </button>
@@ -83,7 +83,7 @@
                         </div>
 
                         <a href="{{ route('lms.courses.show', $course->id) }}" 
-                            class="w-full py-2.5 rounded-xl bg-brand-900 hover:bg-brand-950 text-white font-bold text-xs tracking-wide text-center transition shadow-xs flex items-center justify-center gap-1.5">
+                            class="w-full min-h-[44px] py-2.5 rounded-xl bg-brand-900 hover:bg-brand-950 text-white font-bold text-xs tracking-wide text-center transition shadow-xs flex items-center justify-center gap-1.5">
                             <span>Buka Ruang Belajar</span>
                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         </a>
@@ -97,16 +97,16 @@
     <!-- Modal Tambah Kursus Baru (Guru & Admin) -->
     @if(in_array(auth()->user()->role?->name, ['super_admin', 'admin', 'guru']))
     <div id="modalNewCourse" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 hidden">
-        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div class="bg-brand-950 text-white p-5 flex justify-between items-center">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
+            <div class="bg-brand-950 text-white p-5 flex justify-between items-center sticky top-0 z-10">
                 <h3 class="font-bold text-base">Buka Kelas Pembelajaran Baru</h3>
-                <button onclick="document.getElementById('modalNewCourse').classList.add('hidden')" class="text-slate-400 hover:text-white">&times;</button>
+                <button onclick="document.getElementById('modalNewCourse').classList.add('hidden')" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition">&times;</button>
             </div>
             <form action="{{ route('lms.courses.store') }}" method="POST" class="p-6 space-y-4">
                 @csrf
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Mata Pelajaran</label>
-                    <select name="subject_id" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-700 outline-none">
+                    <select name="subject_id" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-sm focus:ring-2 focus:ring-brand-700 outline-none">
                         <option value="">-- Pilih Mata Pelajaran --</option>
                         @foreach($subjects as $sub)
                             <option value="{{ $sub->id }}">{{ $sub->name }} ({{ $sub->code ?? 'Umum' }})</option>
@@ -116,7 +116,7 @@
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Rombongan Belajar (Kelas)</label>
-                    <select name="class_id" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-700 outline-none">
+                    <select name="class_id" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-sm focus:ring-2 focus:ring-brand-700 outline-none">
                         <option value="">-- Pilih Kelas --</option>
                         @foreach($classes as $cls)
                             <option value="{{ $cls->id }}">{{ $cls->name }}</option>
@@ -127,11 +127,11 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Tahun Ajaran</label>
-                        <input type="text" name="academic_year" value="2026/2027" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm outline-none">
+                        <input type="text" name="academic_year" value="2026/2027" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-sm outline-none">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Semester</label>
-                        <select name="semester" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm outline-none">
+                        <select name="semester" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-sm outline-none">
                             <option value="ganjil">Ganjil</option>
                             <option value="genap">Genap</option>
                         </select>
@@ -140,12 +140,12 @@
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Deskripsi Ringkas</label>
-                    <textarea name="description" rows="2" placeholder="Capaian pembelajaran atau info umum kelas..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm outline-none"></textarea>
+                    <textarea name="description" rows="2" placeholder="Capaian pembelajaran atau info umum kelas..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-sm outline-none"></textarea>
                 </div>
 
-                <div class="pt-2 flex justify-end gap-2">
-                    <button type="button" onclick="document.getElementById('modalNewCourse').classList.add('hidden')" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold">Batal</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl bg-brand-800 hover:bg-brand-900 text-white text-sm font-bold shadow-xs">Simpan & Buka Kelas</button>
+                <div class="pt-2 flex flex-col-reverse sm:flex-row justify-end gap-2">
+                    <button type="button" onclick="document.getElementById('modalNewCourse').classList.add('hidden')" class="w-full sm:w-auto min-h-[44px] px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold flex items-center justify-center">Batal</button>
+                    <button type="submit" class="w-full sm:w-auto min-h-[44px] px-5 py-2 rounded-xl bg-brand-800 hover:bg-brand-900 text-white text-sm font-bold shadow-xs flex items-center justify-center">Simpan & Buka Kelas</button>
                 </div>
             </form>
         </div>

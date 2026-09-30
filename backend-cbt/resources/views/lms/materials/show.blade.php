@@ -67,7 +67,7 @@
 
                 <!-- File Attachment Box -->
                 @if($material->type === 'file' && $material->file_path)
-                    <div class="mb-8 p-6 rounded-2xl bg-blue-50/70 border border-blue-200 flex items-center justify-between gap-4">
+                    <div class="mb-8 p-5 sm:p-6 rounded-2xl bg-blue-50/70 border border-blue-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
                                 <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
@@ -78,7 +78,7 @@
                             </div>
                         </div>
                         <a href="{{ asset('storage/' . $material->file_path) }}" target="_blank" download
-                            class="px-5 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-xs transition shrink-0 flex items-center gap-1.5">
+                            class="w-full sm:w-auto min-h-[44px] px-5 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-xs transition shrink-0 flex items-center justify-center gap-1.5">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                             <span>Unduh Berkas</span>
                         </a>
@@ -95,21 +95,25 @@
                 <!-- Student Completion Action -->
                 @if(auth()->user()->isSiswa())
                     <div class="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <div class="text-xs text-slate-500">
+                        <div class="text-xs text-slate-500 text-center sm:text-left">
                             @if($isCompleted)
-                                <span class="text-emerald-700 font-bold flex items-center gap-1.5">
-                                    <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                    Anda telah menandai materi ini selesai dipelajari.
+                                <span class="text-emerald-700 font-bold flex items-center justify-center sm:justify-start gap-1.5">
+                                    <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    <span>Anda telah menandai materi ini selesai dipelajari.</span>
                                 </span>
                             @else
                                 <span>Tandai selesai jika Anda sudah memahami materi di atas.</span>
                             @endif
                         </div>
 
-                        <form action="{{ route('lms.materials.toggle-complete', [$course->id, $material->id]) }}" method="POST">
+                        <form action="{{ route('lms.materials.toggle-complete', [$course->id, $material->id]) }}" method="POST" class="w-full sm:w-auto">
                             @csrf
                             <button type="submit" 
-                                class="px-6 py-2.5 rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-2 @if($isCompleted) bg-slate-200 hover:bg-slate-300 text-slate-800 @else bg-emerald-700 hover:bg-emerald-800 text-white @endif">
+                                @class([
+                                    'w-full sm:w-auto min-h-[44px] px-6 py-2.5 rounded-xl font-bold text-xs shadow-xs transition flex items-center justify-center gap-2',
+                                    'bg-slate-200 hover:bg-slate-300 text-slate-800' => $isCompleted,
+                                    'bg-emerald-700 hover:bg-emerald-800 text-white' => !$isCompleted,
+                                ])>
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                                 <span>{{ $isCompleted ? 'Tandai Belum Selesai' : 'Tandai Sudah Selesai' }}</span>
                             </button>

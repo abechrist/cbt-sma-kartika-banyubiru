@@ -88,54 +88,60 @@
         body.font-scale-lg .exam-text { font-size: 19px; line-height: 1.7; }
     </style>
 </head>
-<body class="min-h-full flex flex-col font-sans text-slate-900 bg-slate-100 font-scale-md"
+<body class="min-h-full flex flex-col font-sans text-slate-900 bg-slate-100 font-scale-md no-pull-refresh"
     oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;" oncopy="return false;" oncut="return false;" onpaste="return false;">
 
-    <!-- CBT Cockpit Top HUD Bar -->
+    <!-- CBT Cockpit Top HUD Bar (Sleek & Mobile Optimized) -->
     <header class="bg-brand-950 text-white border-b border-brand-900/80 shadow-md sticky top-0 z-40 no-print">
-        <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap justify-between items-center gap-3">
-            <!-- School Crest & Exam Title -->
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 flex items-center justify-center shrink-0">
-                    <img src="{{ asset('images/logo-kartika.png') }}" alt="Logo SMA Kartika III-1 Banyubiru" class="w-10 h-10 object-contain drop-shadow-xs">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 py-2 sm:py-2.5 flex items-center justify-between gap-2 sm:gap-3">
+            <!-- Left: School Crest & Exam Title -->
+            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center shrink-0">
+                    <img src="{{ asset('images/logo-kartika.png') }}" alt="Logo SMA Kartika III-1 Banyubiru" class="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-xs">
                 </div>
-                <div>
-                    <h1 class="text-sm sm:text-base font-bold text-white leading-tight tracking-tight">
+                <div class="min-w-0">
+                    <h1 class="text-xs sm:text-base font-bold text-white leading-tight tracking-tight truncate">
                         {{ $attempt->session->exam->name }}
                     </h1>
-                    <div class="flex items-center gap-2 text-xs text-brand-200 mt-0.5">
-                        <span class="font-medium text-gold-300">{{ $attempt->session->name }}</span>
-                        <span>•</span>
-                        <span>{{ $attempt->user->name }} ({{ $attempt->user->nisn ?? 'Peserta' }})</span>
+                    <div class="flex items-center gap-1.5 text-[10px] sm:text-xs text-brand-200 mt-0.5 truncate">
+                        <span class="font-semibold text-gold-300">{{ $attempt->session->name }}</span>
+                        <span class="text-brand-600 hidden sm:inline">•</span>
+                        <span class="hidden sm:inline truncate">{{ $attempt->user->name }} ({{ $attempt->user->nisn ?? 'Peserta' }})</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Controls & Timer Cockpit -->
-            <div class="flex items-center gap-3 sm:gap-4">
+            <!-- Right: Controls & Timer Cockpit -->
+            <div class="flex items-center gap-2 sm:gap-4 shrink-0">
                 <!-- Auto Save Status Indicator -->
-                <div class="auto-save-indicator flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-emerald-800 text-emerald-300 text-xs font-semibold" id="saveIndicator" style="opacity: 0;">
-                    <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                    <span>✓ Tersimpan</span>
+                <div class="auto-save-indicator flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-emerald-800 text-emerald-300 text-[10px] sm:text-xs font-semibold" id="saveIndicator" style="opacity: 0;">
+                    <svg class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    <span class="hidden sm:inline">Tersimpan</span>
                 </div>
 
-                <!-- Font Size Adjuster -->
-                <div class="hidden sm:flex items-center gap-1 bg-brand-900/90 p-1 rounded-lg border border-brand-800 text-xs">
+                <!-- Font Size Adjuster (Desktop) -->
+                <div class="hidden md:flex items-center gap-1 bg-brand-900/90 p-1 rounded-lg border border-brand-800 text-xs">
                     <button type="button" onclick="setFontScale('sm')" title="Kecilkan Font" class="px-2 py-0.5 rounded text-brand-200 hover:text-white hover:bg-brand-800 font-bold transition">A-</button>
                     <button type="button" onclick="setFontScale('md')" title="Font Normal" class="px-2 py-0.5 rounded bg-brand-800 text-gold-300 font-bold transition">A</button>
                     <button type="button" onclick="setFontScale('lg')" title="Besarkan Font" class="px-2 py-0.5 rounded text-brand-200 hover:text-white hover:bg-brand-800 font-bold transition">A+</button>
                 </div>
 
-                <!-- Fullscreen Button -->
-                <button type="button" onclick="enterFullscreen()" title="Mode Layar Penuh" class="hidden sm:flex p-1.5 rounded-lg bg-brand-900/90 hover:bg-brand-800 text-brand-200 hover:text-white border border-brand-800 transition">
+                <!-- Fullscreen Button (Desktop) -->
+                <button type="button" onclick="enterFullscreen()" title="Mode Layar Penuh" class="hidden md:flex p-1.5 rounded-lg bg-brand-900/90 hover:bg-brand-800 text-brand-200 hover:text-white border border-brand-800 transition">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
                 </button>
 
+                <!-- Mobile Question Palette Trigger Button -->
+                <button type="button" onclick="toggleMobilePalette()" aria-label="Buka Daftar Nomor Soal" class="lg:hidden px-2.5 py-1.5 rounded-xl bg-brand-900 border border-brand-700 text-gold-300 font-bold text-xs flex items-center gap-1.5 shadow-xs active:bg-brand-800 transition">
+                    <svg class="w-4 h-4 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                    <span>Soal <span id="mobileCurrentNum">1</span>/{{ $questions->count() }}</span>
+                </button>
+
                 <!-- High-Impact Countdown Timer -->
-                <div class="bg-brand-900 px-3.5 py-1.5 rounded-xl border border-brand-800 flex items-center gap-2 shadow-xs">
+                <div class="bg-brand-900 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-xl border border-brand-800 flex items-center gap-2 shadow-xs">
                     <div class="text-right">
-                        <div class="text-[10px] font-bold uppercase tracking-wider text-brand-300 leading-none">Sisa Waktu</div>
-                        <div id="countdown" class="text-xl sm:text-2xl font-bold font-mono text-gold-400 leading-none mt-1 tabular-nums">--:--</div>
+                        <div class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-brand-300 leading-none">Sisa Waktu</div>
+                        <div id="countdown" class="text-base sm:text-2xl font-bold font-mono text-gold-400 leading-none mt-0.5 tabular-nums">--:--</div>
                     </div>
                 </div>
             </div>
@@ -143,7 +149,7 @@
     </header>
 
     <!-- Main Workspace Container -->
-    <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6 flex-1">
+    <div class="max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col lg:flex-row gap-6 flex-1">
         <!-- Question Workspace (Main Column) -->
         <div class="flex-1 order-1 lg:order-1">
             @csrf
@@ -151,14 +157,14 @@
             <input type="hidden" name="token" value="{{ request()->query('token', '') }}">
 
             @foreach($questions as $index => $question)
-            <div class="question-card bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8" id="question{{ $index }}" data-question-id="{{ $question->id }}">
+            <div class="question-card bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-8" id="question{{ $index }}" data-question-id="{{ $question->id }}">
                 <!-- Card Header -->
-                <div class="flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-slate-200 mb-6">
-                    <div class="flex items-center gap-2.5">
-                        <span class="px-3.5 py-1 rounded-lg bg-brand-800 text-white font-bold text-sm tracking-wide">
-                            Soal Nomor {{ $index + 1 }}
+                <div class="flex flex-wrap items-center justify-between gap-2.5 pb-4 border-b border-slate-200 mb-5">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="px-3 py-1 rounded-lg bg-brand-800 text-white font-bold text-xs sm:text-sm tracking-wide">
+                            Soal No. {{ $index + 1 }}
                         </span>
-                        <span class="px-2.5 py-1 text-xs font-semibold rounded-lg
+                        <span class="px-2 py-0.5 text-[11px] font-semibold rounded-md
                             @switch($question->difficulty)
                                 @case('easy') bg-emerald-100 text-emerald-800 border border-emerald-200 @break
                                 @case('medium') bg-amber-100 text-amber-800 border border-amber-200 @break
@@ -168,18 +174,19 @@
                         ">
                             Tingkat: {{ ucfirst($question->difficulty) }}
                         </span>
-                        <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-slate-100 text-slate-600 border border-slate-200">
-                            Bobot: {{ $question->score }} poin
+                        <span class="px-2 py-0.5 text-[11px] font-medium rounded-md bg-slate-100 text-slate-600 border border-slate-200">
+                            {{ $question->score }} poin
                         </span>
                     </div>
 
                     <!-- Flag / Ragu-ragu Checkbox -->
-                    <label class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-200 cursor-pointer transition">
+                    <label class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 cursor-pointer transition min-h-[36px] select-none">
                         <input type="checkbox" class="flag-checkbox h-4 w-4 text-amber-600 focus:ring-amber-500 rounded border-amber-300"
                             data-index="{{ $index }}" onchange="toggleFlag({{ $index }}, this.checked)">
                         <span class="text-xs font-bold text-amber-900">Ragu-ragu</span>
                     </label>
                 </div>
+
 
                 <!-- Soal Content -->
                 <div class="mb-8">
@@ -292,21 +299,26 @@
                 </div>
                 @endif
 
-                <!-- Bottom Navigation Buttons -->
-                <div class="flex items-center justify-between mt-10 pt-6 border-t border-slate-200">
+                <!-- Bottom Navigation Buttons (Responsive & Thumb-Friendly) -->
+                <div class="flex items-center justify-between mt-8 pt-5 border-t border-slate-200 gap-2">
                     <button type="button" onclick="prevQuestion()" {{ $index === 0 ? 'disabled' : '' }}
-                        class="px-5 py-2.5 rounded-xl border-2 border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-sm transition flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                        class="flex-1 sm:flex-initial px-3 sm:px-5 py-3 rounded-xl border-2 border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs sm:text-sm transition flex items-center justify-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed active:bg-slate-100">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                        <span>Soal Sebelumnya</span>
+                        <span class="hidden sm:inline">Soal Sebelumnya</span>
+                        <span class="sm:hidden">Sebelumnya</span>
                     </button>
 
-                    <span class="text-xs font-bold text-slate-400 font-mono tracking-wider">
-                        {{ $index + 1 }} DARI {{ $questions->count() }}
-                    </span>
+                    <!-- Mobile Center Quick Palette Trigger Button -->
+                    <button type="button" onclick="toggleMobilePalette()" aria-label="Buka Daftar Nomor Soal" 
+                        class="lg:hidden px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-200 active:bg-slate-300 transition">
+                        <svg class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                        <span>{{ $index + 1 }} / {{ $questions->count() }}</span>
+                    </button>
 
                     <button type="button" onclick="nextQuestion()" {{ $index === $questions->count() - 1 ? 'disabled' : '' }}
-                        class="px-5 py-2.5 rounded-xl bg-brand-800 hover:bg-brand-900 text-white font-semibold text-sm transition flex items-center gap-2 shadow-xs disabled:opacity-40 disabled:cursor-not-allowed">
-                        <span>Soal Berikutnya</span>
+                        class="flex-1 sm:flex-initial px-3 sm:px-5 py-3 rounded-xl bg-brand-800 hover:bg-brand-900 text-white font-semibold text-xs sm:text-sm transition flex items-center justify-center gap-1.5 shadow-xs disabled:opacity-40 disabled:cursor-not-allowed active:bg-brand-950">
+                        <span class="hidden sm:inline">Soal Berikutnya</span>
+                        <span class="sm:hidden">Berikutnya</span>
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </button>
                 </div>
@@ -314,8 +326,8 @@
             @endforeach
         </div>
 
-        <!-- Question Navigation Sidebar (Palette) -->
-        <aside class="w-full lg:w-80 shrink-0 order-2 lg:order-2 no-print">
+        <!-- Question Navigation Sidebar (Palette for Desktop / Laptop) -->
+        <aside class="w-full lg:w-80 shrink-0 hidden lg:block no-print">
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sticky top-20">
                 <!-- Sidebar Header -->
                 <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
@@ -381,6 +393,81 @@
             </div>
         </aside>
     </div>
+
+    <!-- Mobile Slide-Up Bottom Sheet for Question Palette (Touch-Optimized) -->
+    <div id="mobilePaletteBackdrop" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden transition-opacity duration-200 lg:hidden" onclick="toggleMobilePalette()"></div>
+
+    <div id="mobilePaletteSheet" class="fixed left-0 right-0 bottom-0 bg-white z-50 rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-300 ease-out border-t border-slate-200 max-h-[85vh] flex flex-col lg:hidden safe-bottom">
+        <!-- Sheet Handle & Header -->
+        <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50 rounded-t-3xl">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-brand-900 text-gold-400 flex items-center justify-center font-bold text-xs shadow-xs">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm text-slate-900 leading-none">Daftar Nomor Soal</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Ketuk nomor untuk membuka soal langsung</p>
+                </div>
+            </div>
+            <button type="button" onclick="toggleMobilePalette()" aria-label="Tutup Daftar Soal" class="p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-200/60 transition">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <!-- Sheet Scrollable Body -->
+        <div class="p-4 overflow-y-auto flex-1 space-y-4">
+            <!-- Visual Legend -->
+            <div class="grid grid-cols-2 gap-2 text-xs py-2 px-3 border border-slate-100 bg-slate-50 rounded-xl">
+                <div class="flex items-center gap-2">
+                    <span class="w-3.5 h-3.5 rounded bg-brand-800 shrink-0"></span>
+                    <span class="text-slate-600 text-[11px]">Dijawab</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-3.5 h-3.5 rounded bg-amber-400 ring-1 ring-amber-600 shrink-0"></span>
+                    <span class="text-slate-600 text-[11px]">Soal Aktif</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-3.5 h-3.5 rounded bg-rose-500 shrink-0"></span>
+                    <span class="text-slate-600 text-[11px]">Ragu-ragu</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-3.5 h-3.5 rounded bg-slate-200 border border-slate-300 shrink-0"></span>
+                    <span class="text-slate-600 text-[11px]">Belum Jawab</span>
+                </div>
+            </div>
+
+            <!-- Mobile Grid of Question Buttons -->
+            <div class="grid grid-cols-5 gap-2" id="mobileQuestionNav">
+                @foreach($questions as $index => $question)
+                <button type="button" 
+                    onclick="goToQuestionAndClose({{ $index }})"
+                    id="mobileNavBtn{{ $index }}"
+                    class="question-nav-btn unanswered !w-full !h-11 !rounded-xl active:scale-95"
+                    data-index="{{ $index }}">
+                    {{ $index + 1 }}
+                </button>
+                @endforeach
+            </div>
+
+            <!-- Mobile Progress Bar -->
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1.5">
+                    <span>Kemajuan Ujian</span>
+                    <span><span id="mobileProgressText" class="text-brand-800 font-bold">0</span> / {{ $questions->count() }}</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                    <div id="mobileProgressBar" class="bg-gradient-to-r from-brand-700 to-brand-600 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Mobile Final Submit -->
+            <button type="button" onclick="submitExamFromMobile()" class="w-full py-3.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-bold text-sm transition shadow-md flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                <span>Kumpulkan Ujian Sekarang</span>
+            </button>
+        </div>
+    </div>
+
 
     <!-- Scripting Engine -->
     <script>
@@ -541,14 +628,59 @@
             if (kioskActive) setTimeout(() => { if (document.hidden) sendActivity('kiosk_tab_switch', true); }, 50);
         });
 
+        // Mobile Question Palette Controls
+        function toggleMobilePalette() {
+            const sheet = document.getElementById('mobilePaletteSheet');
+            const backdrop = document.getElementById('mobilePaletteBackdrop');
+            if (sheet && backdrop) {
+                const isOpen = !backdrop.classList.contains('hidden');
+                if (isOpen) {
+                    sheet.classList.add('translate-y-full');
+                    sheet.classList.remove('translate-y-0');
+                    setTimeout(() => backdrop.classList.add('hidden'), 250);
+                    document.body.style.overflow = '';
+                } else {
+                    backdrop.classList.remove('hidden');
+                    setTimeout(() => {
+                        sheet.classList.remove('translate-y-full');
+                        sheet.classList.add('translate-y-0');
+                    }, 10);
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+        }
+
+        function goToQuestionAndClose(index) {
+            goToQuestion(index);
+            toggleMobilePalette();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function submitExamFromMobile() {
+            toggleMobilePalette();
+            setTimeout(() => {
+                if (confirmSubmit()) {
+                    document.getElementById('submitForm').submit();
+                }
+            }, 300);
+        }
+
         // Navigation
         function goToQuestion(index) {
             document.querySelectorAll('.question-card').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('[id^="navBtn"]').forEach(el => el.classList.remove('current'));
+            document.querySelectorAll('[id^="navBtn"], [id^="mobileNavBtn"]').forEach(el => el.classList.remove('current'));
+            
             const card = document.getElementById('question' + index);
             const btn = document.getElementById('navBtn' + index);
+            const mobileBtn = document.getElementById('mobileNavBtn' + index);
+            
             if (card) card.classList.add('active');
             if (btn) btn.classList.add('current');
+            if (mobileBtn) mobileBtn.classList.add('current');
+            
+            const mobileNumEl = document.getElementById('mobileCurrentNum');
+            if (mobileNumEl) mobileNumEl.textContent = index + 1;
+
             currentQuestion = index;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -566,6 +698,10 @@
             if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return;
             if (e.key === 'ArrowLeft') prevQuestion();
             if (e.key === 'ArrowRight') nextQuestion();
+            if (e.key === 'Escape') {
+                const backdrop = document.getElementById('mobilePaletteBackdrop');
+                if (backdrop && !backdrop.classList.contains('hidden')) toggleMobilePalette();
+            }
             
             const activeCard = document.getElementById('question' + currentQuestion);
             if (!activeCard) return;
@@ -639,38 +775,62 @@
             const qIndex = [...document.querySelectorAll('.question-card')].findIndex(el => parseInt(el.dataset.questionId) === questionId);
             if (qIndex === -1) return;
             const btn = document.getElementById('navBtn' + qIndex);
+            const mobileBtn = document.getElementById('mobileNavBtn' + qIndex);
             if (flagged[qIndex]) return;
-            btn.className = 'question-nav-btn ' + (answered ? 'answered' : 'unanswered');
-            if (qIndex === currentQuestion) btn.classList.add('current');
+
+            const btnClass = 'question-nav-btn ' + (answered ? 'answered' : 'unanswered');
+            if (btn) btn.className = btnClass;
+            if (mobileBtn) mobileBtn.className = btnClass + ' !w-full !h-11 !rounded-xl active:scale-95';
+            
+            if (qIndex === currentQuestion) {
+                if (btn) btn.classList.add('current');
+                if (mobileBtn) mobileBtn.classList.add('current');
+            }
             updateProgress();
         }
 
         function toggleFlag(index, isFlagged) {
             flagged[index] = isFlagged;
             const btn = document.getElementById('navBtn' + index);
-            btn.className = 'question-nav-btn ' + (isFlagged ? 'flagged' : 'unanswered');
+            const mobileBtn = document.getElementById('mobileNavBtn' + index);
+            
+            const flagClass = 'question-nav-btn ' + (isFlagged ? 'flagged' : 'unanswered');
+            if (btn) btn.className = flagClass;
+            if (mobileBtn) mobileBtn.className = flagClass + ' !w-full !h-11 !rounded-xl active:scale-95';
+            
             const card = document.getElementById('question' + index);
             const qId = parseInt(card?.dataset.questionId);
             if (!isFlagged && answers[qId]) {
                 const hasAnswer = countSelected(answers[qId].selected_options) > 0 || (answers[qId].answer_text && answers[qId].answer_text.trim() !== '');
-                btn.className = 'question-nav-btn ' + (hasAnswer ? 'answered' : 'unanswered');
+                const ansClass = 'question-nav-btn ' + (hasAnswer ? 'answered' : 'unanswered');
+                if (btn) btn.className = ansClass;
+                if (mobileBtn) mobileBtn.className = ansClass + ' !w-full !h-11 !rounded-xl active:scale-95';
             }
-            if (index === currentQuestion) btn.classList.add('current');
+            if (index === currentQuestion) {
+                if (btn) btn.classList.add('current');
+                if (mobileBtn) mobileBtn.classList.add('current');
+            }
         }
 
         function updateProgress() {
             let count = 0;
-            document.querySelectorAll('.question-nav-btn.answered').forEach(() => count++);
+            document.querySelectorAll('#questionNav .question-nav-btn.answered').forEach(() => count++);
+            
             const txt = document.getElementById('progressText');
             const bar = document.getElementById('progressBar');
             if (txt) txt.textContent = count;
             if (bar) bar.style.width = (count / TOTAL_QUESTIONS * 100) + '%';
+
+            const mobileTxt = document.getElementById('mobileProgressText');
+            const mobileBar = document.getElementById('mobileProgressBar');
+            if (mobileTxt) mobileTxt.textContent = count;
+            if (mobileBar) mobileBar.style.width = (count / TOTAL_QUESTIONS * 100) + '%';
         }
 
         function confirmSubmit() {
-            const answered = document.querySelectorAll('.question-nav-btn.answered').length;
+            const answered = document.querySelectorAll('#questionNav .question-nav-btn.answered').length;
             const unanswered = TOTAL_QUESTIONS - answered;
-            const flagCount = document.querySelectorAll('.question-nav-btn.flagged').length;
+            const flagCount = Object.values(flagged).filter(Boolean).length;
             
             let message = `Ringkasan Pengerjaan:\n• Soal Terjawab: ${answered}\n• Belum Dijawab: ${unanswered}`;
             if (flagCount > 0) message += `\n• Masih Ragu-ragu: ${flagCount}`;
@@ -685,6 +845,7 @@
             updateNavButton({{ $answer->question_id }}, true);
         @endforeach
         updateProgress();
+
 
         // Periodic sync
         setInterval(() => {

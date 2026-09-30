@@ -93,7 +93,11 @@
                         </td>
                         <td class="px-6 py-4 text-xs font-semibold text-slate-700 whitespace-nowrap">{{ $user->class->name ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="inline-flex items-center px-2.5 py-0.5 text-[11px] font-bold rounded-full border whitespace-nowrap {{ $user->is_active ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-slate-100 text-slate-700 border-slate-200' }}">
+                            <span @class([
+                                'inline-flex items-center px-2.5 py-0.5 text-[11px] font-bold rounded-full border whitespace-nowrap',
+                                'bg-emerald-50 text-emerald-800 border-emerald-200' => $user->is_active,
+                                'bg-slate-100 text-slate-700 border-slate-200' => !$user->is_active,
+                            ])>
                                 {{ $user->is_active ? 'Aktif' : 'Nonaktif' }}
                             </span>
                         </td>

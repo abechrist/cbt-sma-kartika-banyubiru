@@ -65,13 +65,13 @@
 
                 <!-- Attachment file if any -->
                 @if($assignment->file_attachment)
-                <div class="mb-6 p-4 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-between gap-4">
+                <div class="mb-6 p-4 rounded-2xl bg-slate-100 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 text-brand-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                        <svg class="w-5 h-5 text-brand-800 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
                         <span class="text-xs font-bold text-slate-800">Lampiran Lembar Kerja Guru</span>
                     </div>
                     <a href="{{ asset('storage/' . $assignment->file_attachment) }}" target="_blank" download
-                        class="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs">
+                        class="w-full sm:w-auto min-h-[44px] px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs flex items-center justify-center">
                         Unduh Lampiran
                     </a>
                 </div>
@@ -81,7 +81,7 @@
 
         <!-- SISWA VIEW: Form Pengumpulan Tugas -->
         @if(auth()->user()->isSiswa())
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 mb-8">
             <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                 <svg class="w-5 h-5 text-brand-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                 <span>Pengumpulan Tugas Anda</span>
@@ -138,16 +138,16 @@
                 @csrf
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Unggah Berkas Jawaban (PDF, DOC, Gambar, maks 20MB)</label>
-                    <input type="file" name="file" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none focus:bg-white focus:ring-2 focus:ring-brand-700">
+                    <input type="file" name="file" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-xs outline-none focus:bg-white focus:ring-2 focus:ring-brand-700">
                 </div>
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Catatan Tambahan (Opsional)</label>
-                    <textarea name="notes" rows="3" placeholder="Tuliskan catatan pengerjaan atau keterangan tugas..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none focus:bg-white focus:ring-2 focus:ring-brand-700"></textarea>
+                    <textarea name="notes" rows="3" placeholder="Tuliskan catatan pengerjaan atau keterangan tugas..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-xs outline-none focus:bg-white focus:ring-2 focus:ring-brand-700"></textarea>
                 </div>
 
                 <div class="flex justify-end">
-                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-brand-900 hover:bg-brand-950 text-white font-bold text-xs shadow-xs transition flex items-center gap-2">
+                    <button type="submit" class="w-full sm:w-auto min-h-[44px] px-6 py-2.5 rounded-xl bg-brand-900 hover:bg-brand-950 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-2">
                         <svg class="w-4 h-4 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                         <span>{{ $mySubmission ? 'Kirim Pembaruan Tugas' : 'Kumpulkan Tugas Sekarang' }}</span>
                     </button>
@@ -198,7 +198,7 @@
 
                             @if($sub->file_path)
                             <a href="{{ asset('storage/' . $sub->file_path) }}" target="_blank" download 
-                                class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center gap-1.5 transition">
+                                class="w-full sm:w-auto min-h-[44px] px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-1.5 transition">
                                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                 <span>Unduh Berkas Jawaban</span>
                             </a>
@@ -216,15 +216,15 @@
                             @csrf
                             <div class="w-full sm:w-36">
                                 <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Skor (Maks: {{ $assignment->max_score }})</label>
-                                <input type="number" step="0.5" name="score" value="{{ $sub->score }}" min="0" max="{{ $assignment->max_score }}" required placeholder="0-100" class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-xl font-mono text-sm font-bold text-slate-900 outline-none focus:ring-1 focus:ring-brand-700">
+                                <input type="number" step="0.5" name="score" value="{{ $sub->score }}" min="0" max="{{ $assignment->max_score }}" required placeholder="0-100" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl font-mono text-base sm:text-sm font-bold text-slate-900 outline-none focus:ring-1 focus:ring-brand-700">
                             </div>
 
                             <div class="w-full sm:flex-1">
                                 <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Catatan Evaluasi / Feedback</label>
-                                <input type="text" name="feedback" value="{{ $sub->feedback }}" placeholder="Catatan perbaikan atau pujian untuk siswa..." class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-xl text-xs outline-none focus:ring-1 focus:ring-brand-700">
+                                <input type="text" name="feedback" value="{{ $sub->feedback }}" placeholder="Catatan perbaikan atau pujian untuk siswa..." class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-base sm:text-xs outline-none focus:ring-1 focus:ring-brand-700">
                             </div>
 
-                            <button type="submit" class="px-5 py-2 rounded-xl bg-brand-800 hover:bg-brand-900 text-white font-bold text-xs shadow-xs shrink-0">
+                            <button type="submit" class="w-full sm:w-auto min-h-[44px] px-5 py-2 rounded-xl bg-brand-800 hover:bg-brand-900 text-white font-bold text-xs shadow-xs shrink-0 flex items-center justify-center">
                                 Simpan Nilai
                             </button>
                         </form>

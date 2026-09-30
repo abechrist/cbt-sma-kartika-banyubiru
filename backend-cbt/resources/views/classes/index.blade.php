@@ -33,7 +33,11 @@
                         <td class="px-6 py-4 font-mono text-xs text-slate-600 whitespace-nowrap">{{ $class->academic_year ?? 'T.A. 2026/2027' }}</td>
                         <td class="px-6 py-4 font-mono font-bold text-slate-800 whitespace-nowrap">{{ $class->students()->count() }} siswa</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="inline-flex items-center px-3 py-1 text-xs font-bold rounded-full border whitespace-nowrap {{ $class->is_active ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-slate-100 text-slate-700 border-slate-200' }}">
+                            <span @class([
+                                'inline-flex items-center px-3 py-1 text-xs font-bold rounded-full border whitespace-nowrap',
+                                'bg-emerald-50 text-emerald-800 border-emerald-200' => $class->is_active,
+                                'bg-slate-100 text-slate-700 border-slate-200' => !$class->is_active,
+                            ])>
                                 {{ $class->is_active ? 'Aktif' : 'Nonaktif' }}
                             </span>
                         </td>

@@ -31,7 +31,11 @@
                         <td class="px-6 py-4 font-bold text-slate-900">{{ $subject->name }}</td>
                         <td class="px-6 py-4 text-slate-600 text-xs font-semibold whitespace-nowrap">{{ $subject->teacher->name ?? 'Belum ditentukan' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="inline-flex items-center px-3 py-1 text-xs font-bold rounded-full border whitespace-nowrap {{ $subject->is_active ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-slate-100 text-slate-700 border-slate-200' }}">
+                            <span @class([
+                                'inline-flex items-center px-3 py-1 text-xs font-bold rounded-full border whitespace-nowrap',
+                                'bg-emerald-50 text-emerald-800 border-emerald-200' => $subject->is_active,
+                                'bg-slate-100 text-slate-700 border-slate-200' => !$subject->is_active,
+                            ])>
                                 {{ $subject->is_active ? 'Aktif' : 'Nonaktif' }}
                             </span>
                         </td>

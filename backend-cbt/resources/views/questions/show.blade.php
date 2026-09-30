@@ -34,7 +34,11 @@
                 <span class="px-3 py-1 text-xs font-mono font-bold rounded-lg bg-slate-100 text-slate-800 border border-slate-200">
                     Bobot: {{ $question->score }} poin
                 </span>
-                <span class="px-3 py-1 text-xs font-bold rounded-full border {{ $question->is_active ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-slate-100 text-slate-700 border-slate-200' }}">
+                <span @class([
+                    'px-3 py-1 text-xs font-bold rounded-full border',
+                    'bg-emerald-50 text-emerald-800 border-emerald-200' => $question->is_active,
+                    'bg-slate-100 text-slate-700 border-slate-200' => !$question->is_active,
+                ])>
                     {{ $question->is_active ? 'Status: Aktif' : 'Status: Nonaktif' }}
                 </span>
             </div>
@@ -77,9 +81,11 @@
                             @if($option->is_correct) bg-emerald-50/70 border-emerald-300 ring-1 ring-emerald-300/60 @else bg-slate-50 border-slate-200 @endif
                         ">
                             <div class="flex items-center gap-3">
-                                <span class="w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-sm
-                                    @if($option->is_correct) bg-emerald-600 text-white @else bg-white border text-slate-700 @endif
-                                ">
+                                <span @class([
+                                    'w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-sm',
+                                    'bg-emerald-600 text-white' => $option->is_correct,
+                                    'bg-white border text-slate-700' => !$option->is_correct,
+                                ])>
                                     {{ $option->label }}
                                 </span>
                                 <span class="flex-1 text-sm font-medium text-slate-900">{{ $option->option_text }}</span>

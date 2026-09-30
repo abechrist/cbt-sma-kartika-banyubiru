@@ -1,14 +1,14 @@
 <x-layouts.app :title="'Aktivasi Token Ujian'">
-    <div class="max-w-md mx-auto py-8 sm:py-14 px-2">
+    <div class="max-w-md mx-auto py-6 sm:py-14 px-3 sm:px-4">
         <div class="bg-white rounded-3xl shadow-xl border border-slate-200/90 overflow-hidden transition-all duration-300 hover:shadow-2xl">
             <!-- Header Banner (Radial Emerald Gradient) -->
-            <div class="bg-gradient-to-br from-brand-950 via-brand-900 to-brand-950 p-8 text-center text-white relative overflow-hidden">
+            <div class="bg-gradient-to-br from-brand-950 via-brand-900 to-brand-950 p-6 sm:p-8 text-center text-white relative overflow-hidden">
                 <div class="absolute -top-12 -right-12 w-36 h-36 bg-gold-400/15 rounded-full blur-2xl pointer-events-none"></div>
                 <div class="absolute -bottom-12 -left-12 w-36 h-36 bg-emerald-400/15 rounded-full blur-2xl pointer-events-none"></div>
 
                 <div class="relative z-10">
-                    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-gold-400 to-amber-500 text-brand-950 flex items-center justify-center ring-4 ring-gold-400/30 shadow-lg shadow-amber-500/20 mb-4 transform hover:scale-105 transition-transform duration-200">
-                        <svg class="w-8 h-8 text-brand-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-2xl bg-gradient-to-br from-gold-400 to-amber-500 text-brand-950 flex items-center justify-center ring-4 ring-gold-400/30 shadow-lg shadow-amber-500/20 mb-4 transform hover:scale-105 transition-transform duration-200">
+                        <svg class="w-7 h-7 sm:w-8 sm:h-8 text-brand-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                         </svg>
                     </div>
@@ -37,7 +37,7 @@
                         <input type="text" name="token" id="tokenInput" value="{{ old('token') }}" required autofocus
                             placeholder="CBT-XXXXXX"
                             oninput="this.value = this.value.toUpperCase()"
-                            class="w-full px-4 py-4 text-center text-2xl font-mono font-black tracking-widest uppercase bg-slate-50 border-2 border-slate-300/90 rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-700/20 focus:border-brand-700 outline-none transition-all duration-150 shadow-inner">
+                            class="w-full px-4 py-3.5 sm:py-4 text-center text-xl sm:text-2xl font-mono font-black tracking-widest uppercase bg-slate-50 border-2 border-slate-300/90 rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-700/20 focus:border-brand-700 outline-none transition-all duration-150 shadow-inner">
                         @error('token')
                             <p class="mt-2.5 text-xs font-semibold text-rose-600 text-center flex items-center justify-center gap-1.5">
                                 <svg class="w-4 h-4 text-rose-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
@@ -47,10 +47,11 @@
                     </div>
 
                     <button type="submit" 
-                        class="w-full py-4 px-4 rounded-2xl bg-brand-900 hover:bg-brand-950 text-white font-extrabold text-sm tracking-wide transition-all duration-200 shadow-md hover:shadow-xl btn-glow-brand flex items-center justify-center gap-2">
+                        class="w-full min-h-[48px] py-3.5 sm:py-4 px-4 rounded-2xl bg-brand-900 hover:bg-brand-950 text-white font-extrabold text-sm tracking-wide transition-all duration-200 shadow-md hover:shadow-xl btn-glow-brand flex items-center justify-center gap-2">
                         <span>Mulai Ujian</span>
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </button>
+                </form>
                 </form>
 
                 <!-- Guidelines Checklist (Card Style) -->

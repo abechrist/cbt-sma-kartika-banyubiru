@@ -1,8 +1,8 @@
 <x-layouts.app :title="'Hasil Capaian Ujian'">
-    <div class="max-w-4xl mx-auto py-8 sm:py-12 px-2">
+    <div class="max-w-4xl mx-auto py-6 sm:py-12 px-3 sm:px-4">
         <div class="bg-white rounded-3xl shadow-xl border border-slate-200/90 overflow-hidden transition-all duration-300">
             <!-- Institutional Header (Modern Radial Gradient) -->
-            <div class="relative overflow-hidden p-8 sm:p-10 text-center text-white" style="background: radial-gradient(circle at 50% 10%, #12472e 0%, #061d13 70%, #020b07 100%);">
+            <div class="relative overflow-hidden p-6 sm:p-10 text-center text-white" style="background: radial-gradient(circle at 50% 10%, #12472e 0%, #061d13 70%, #020b07 100%);">
                 <div class="absolute -top-16 -right-16 w-48 h-48 bg-gold-400/10 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="absolute -bottom-16 -left-16 w-48 h-48 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -14,7 +14,7 @@
                     <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight">
                         Hasil Penilaian Ujian
                     </h1>
-                    <p class="text-base font-bold text-gold-300 mt-2">{{ $attempt->session->exam->name }}</p>
+                    <p class="text-sm sm:text-base font-bold text-gold-300 mt-2">{{ $attempt->session->exam->name }}</p>
                     <p class="text-xs text-brand-200/80 mt-1 font-medium">{{ $attempt->session->name }} • {{ $attempt->user->name }} ({{ $attempt->user->nisn ?? 'Peserta' }})</p>
                 </div>
             </div>
@@ -128,7 +128,7 @@
             <!-- Action Bar -->
             <div class="p-6 bg-slate-50/90 border-t border-slate-200/80 flex justify-center">
                 <a href="{{ route('dashboard') }}" 
-                    class="px-7 py-3 rounded-2xl bg-brand-900 hover:bg-brand-950 text-white font-extrabold text-sm transition-all duration-200 shadow-md hover:shadow-lg btn-glow-brand flex items-center gap-2">
+                    class="w-full sm:w-auto min-h-[48px] px-7 py-3 rounded-2xl bg-brand-900 hover:bg-brand-950 text-white font-extrabold text-sm transition-all duration-200 shadow-md hover:shadow-lg btn-glow-brand flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                     <span>Kembali ke Dashboard</span>
                 </a>

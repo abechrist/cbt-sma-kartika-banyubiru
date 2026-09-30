@@ -33,7 +33,11 @@
                 </div>
                 <div class="flex justify-between py-1.5 border-b border-slate-100">
                     <span class="text-slate-500">Status Aktif</span>
-                    <span class="px-2.5 py-0.5 text-[11px] font-bold rounded-full border {{ $class->is_active ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-slate-100 text-slate-700 border-slate-200' }}">
+                    <span @class([
+                        'px-2.5 py-0.5 text-[11px] font-bold rounded-full border',
+                        'bg-emerald-50 text-emerald-800 border-emerald-200' => $class->is_active,
+                        'bg-slate-100 text-slate-700 border-slate-200' => !$class->is_active,
+                    ])>
                         {{ $class->is_active ? 'Aktif' : 'Nonaktif' }}
                     </span>
                 </div>
@@ -76,7 +80,11 @@
                                 <td class="px-6 py-4 font-semibold text-slate-900">{{ $student->user->name }}</td>
                                 <td class="px-6 py-4 font-mono text-xs text-slate-500">{{ $student->user->email }}</td>
                                 <td class="px-6 py-4">
-                                    <span class="px-2.5 py-0.5 text-[11px] font-bold rounded-full border {{ $student->user->is_active ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-slate-100 text-slate-700 border-slate-200' }}">
+                                    <span @class([
+                                        'px-2.5 py-0.5 text-[11px] font-bold rounded-full border',
+                                        'bg-emerald-50 text-emerald-800 border-emerald-200' => $student->user->is_active,
+                                        'bg-slate-100 text-slate-700 border-slate-200' => !$student->user->is_active,
+                                    ])>
                                         {{ $student->user->is_active ? 'Aktif' : 'Nonaktif' }}
                                     </span>
                                 </td>

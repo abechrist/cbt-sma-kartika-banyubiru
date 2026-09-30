@@ -1,9 +1,10 @@
 <x-layouts.app :title="'Detail Capaian Siswa'">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-4xl mx-auto py-4 sm:py-6">
         <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <a href="{{ route('results.index') }}" class="text-xs font-semibold text-brand-800 hover:text-brand-900 flex items-center gap-1 mb-2">
-                    ← Kembali ke Rekapitulasi Nilai
+                <a href="{{ route('results.index') }}" class="min-h-[44px] text-xs font-bold text-brand-800 hover:text-brand-900 inline-flex items-center gap-1.5 mb-1 transition">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    <span>Kembali ke Rekapitulasi Nilai</span>
                 </a>
                 <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Detail Hasil Ujian Siswa</h1>
                 <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Rincian perolehan poin dan keabsahan lembar pengerjaan peserta.</p>
@@ -12,7 +13,7 @@
 
         <div class="bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden mb-6">
             <!-- Header Meta -->
-            <div class="p-6 border-b border-slate-200 bg-slate-50/80">
+            <div class="p-5 sm:p-6 border-b border-slate-200 bg-slate-50/80">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
                     <div>
                         <span class="text-slate-400 block mb-1">Peserta Didik</span>
@@ -33,11 +34,11 @@
                 </div>
             </div>
 
-            <div class="p-6 sm:p-8">
+            <div class="p-5 sm:p-8">
                 <!-- Score showcase -->
-                <div class="text-center mb-8 p-6 bg-radial from-slate-50 to-white rounded-2xl border border-slate-200">
+                <div class="text-center mb-6 sm:mb-8 p-6 bg-gradient-to-b from-slate-50 to-white rounded-2xl border border-slate-200">
                     <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Total Nilai Capaian</span>
-                    <div class="text-6xl font-black tracking-tight my-2
+                    <div class="text-5xl sm:text-6xl font-black tracking-tight my-2
                         @if($result->percentage >= 75) text-emerald-700
                         @elseif($result->percentage >= 50) text-amber-600
                         @else text-rose-600
@@ -49,17 +50,17 @@
                 </div>
 
                 <!-- Stats Trio -->
-                <div class="grid grid-cols-3 gap-4 mb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-8">
                     <div class="text-center p-4 bg-emerald-50/80 border border-emerald-200 rounded-xl">
-                        <p class="text-3xl font-extrabold text-emerald-800">{{ $result->correct_count }}</p>
+                        <p class="text-3xl font-extrabold text-emerald-800 font-mono">{{ $result->correct_count }}</p>
                         <p class="text-xs font-bold text-emerald-700 uppercase tracking-wider mt-1">Jawaban Benar</p>
                     </div>
                     <div class="text-center p-4 bg-rose-50/80 border border-rose-200 rounded-xl">
-                        <p class="text-3xl font-extrabold text-rose-700">{{ $result->incorrect_count }}</p>
+                        <p class="text-3xl font-extrabold text-rose-700 font-mono">{{ $result->incorrect_count }}</p>
                         <p class="text-xs font-bold text-rose-700 uppercase tracking-wider mt-1">Jawaban Salah</p>
                     </div>
                     <div class="text-center p-4 bg-slate-50 border border-slate-200 rounded-xl">
-                        <p class="text-3xl font-extrabold text-slate-600">{{ $result->unanswered_count }}</p>
+                        <p class="text-3xl font-extrabold text-slate-600 font-mono">{{ $result->unanswered_count }}</p>
                         <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-1">Tidak Dijawab</p>
                     </div>
                 </div>

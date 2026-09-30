@@ -40,3 +40,7 @@ backend-cbt/public/storage
 .grok/
 .impeccable/
 skills/
+
+# Deploy archives
+*.zip
+
