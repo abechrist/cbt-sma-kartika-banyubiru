@@ -9,25 +9,8 @@
             <span class="text-slate-800 font-bold truncate">{{ $assignment->title }}</span>
         </div>
 
-        @if(session('success'))
-            <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-2">
-                <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                <span>{{ session('success') }}</span>
-            </div>
-        @endif
-
-        @if($errors->any())
-            <div class="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm">
-                <ul class="list-disc pl-5 space-y-1">
-                    @foreach($errors->all() as $err)
-                        <li>{{ $err }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <!-- Assignment Information Card -->
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden mb-8">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden mb-8">
             <div class="p-6 sm:p-8 bg-slate-50/80 border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <div class="flex items-center gap-2 mb-2">
@@ -81,7 +64,7 @@
 
         <!-- SISWA VIEW: Form Pengumpulan Tugas -->
         @if(auth()->user()->isSiswa())
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 mb-8">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-xs p-6 sm:p-8 mb-8">
             <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                 <svg class="w-5 h-5 text-brand-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                 <span>Pengumpulan Tugas Anda</span>
@@ -158,7 +141,7 @@
 
         <!-- GURU VIEW: Daftar Pengumpulan Tugas Seluruh Siswa & Form Penilaian -->
         @if(in_array(auth()->user()->role?->name, ['super_admin', 'admin', 'guru']))
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
             <div class="p-6 border-b border-slate-200 bg-slate-50/80 flex justify-between items-center">
                 <div>
                     <h2 class="text-base font-bold text-slate-900">Daftar Pengumpulan Tugas Siswa</h2>

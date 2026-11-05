@@ -7,7 +7,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-xs border border-slate-200 p-5 mb-6">
+        <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-5 mb-6">
             <form method="GET" action="{{ route('grading.index') }}" class="flex flex-wrap gap-3 items-end">
                 <div class="w-full sm:w-64">
                     <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Filter Paket Ujian</label>
@@ -34,14 +34,7 @@
             </form>
         </div>
 
-        @if(session('success'))
-            <div class="mb-5 px-4 py-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-semibold flex items-center gap-2">
-                <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                <span>{{ session('success') }}</span>
-            </div>
-        @endif
-
-        <div class="bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
+        <div class="bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden">
             @if($results->count() === 0)
                 <div class="p-12 text-center text-slate-400">
                     <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3">

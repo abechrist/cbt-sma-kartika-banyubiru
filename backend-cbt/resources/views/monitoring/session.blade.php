@@ -6,15 +6,15 @@
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 Kembali ke Daftar Monitoring
             </a>
-            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Monitoring: {{ $session->name }}</h1>
+            <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Monitoring: {{ $session->name }}</h1>
             <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
-                {{ $session->exam->name }} • Ruang: <span class="font-semibold text-slate-800">{{ $session->room ?? 'Lab Komputer' }}</span> • Token: <span class="font-mono font-bold text-gold-700">{{ $session->tokens->first()?->token ?? '-' }}</span>
+                {{ $session->exam->name }} • Ruang / Kelas: <span class="font-semibold text-slate-800">{{ $session->room ?? 'Ruang Ujian' }}</span> • Token: <span class="font-mono font-bold text-gold-700">{{ $session->tokens->first()?->token ?? '-' }}</span>
             </p>
         </div>
         <div class="flex items-center gap-3">
-            <span id="liveBadge" class="px-3 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1.5 shadow-xs">
+            <span id="liveBadge" class="px-3 py-1 text-xs font-bold rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                PENGAWASAN LIVE
+                PENGAWASAN AKTIF
             </span>
         </div>
     </div>
@@ -36,19 +36,19 @@
 
     <!-- Fallback if JS Disabled -->
     <noscript>
-        <div class="bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
+        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
             <div class="p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
                 <div class="flex items-center gap-6">
                     <div class="text-center">
-                        <p class="text-2xl font-extrabold text-slate-900 font-mono">{{ $participants->count() }}</p>
+                        <p class="text-2xl font-extrabold text-slate-900 font-mono tabular-nums">{{ $participants->count() }}</p>
                         <p class="text-xs text-slate-500">Total Peserta</p>
                     </div>
                     <div class="text-center">
-                        <p class="text-2xl font-extrabold text-emerald-600 font-mono">{{ $participants->where('status', 'in_progress')->count() }}</p>
+                        <p class="text-2xl font-extrabold text-emerald-600 font-mono tabular-nums">{{ $participants->where('status', 'in_progress')->count() }}</p>
                         <p class="text-xs text-slate-500">Mengerjakan</p>
                     </div>
                     <div class="text-center">
-                        <p class="text-2xl font-extrabold text-brand-800 font-mono">{{ $participants->whereIn('status', ['submitted', 'auto_submitted'])->count() }}</p>
+                        <p class="text-2xl font-extrabold text-brand-800 font-mono tabular-nums">{{ $participants->whereIn('status', ['submitted', 'auto_submitted'])->count() }}</p>
                         <p class="text-xs text-slate-500">Selesai</p>
                     </div>
                 </div>
@@ -60,24 +60,24 @@
                             <th class="px-6 py-3.5 text-left">No</th>
                             <th class="px-6 py-3.5 text-left">Nama Siswa</th>
                             <th class="px-6 py-3.5 text-left">Status</th>
-                            <th class="px-6 py-3.5 text-left">Progress</th>
+                            <th class="px-6 py-3.5 text-left">Progres</th>
                             <th class="px-6 py-3.5 text-right">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
                         @forelse($participants as $participant)
-                        <tr class="hover:bg-slate-50/60">
-                            <td class="px-6 py-4 font-mono text-xs">{{ $loop->iteration }}</td>
+                        <tr class="hover:bg-slate-50">
+                            <td class="px-6 py-4 font-mono text-xs tabular-nums">{{ $loop->iteration }}</td>
                             <td class="px-6 py-4 font-semibold text-slate-900">
                                 {{ $participant['student_name'] }}
                                 @if(($participant['suspicious_flags'] ?? 0) > 0)
-                                    <span class="ml-2 px-2 py-0.5 text-xs bg-rose-100 text-rose-800 border border-rose-200 rounded-full font-bold">
-                                        ⚠ {{ $participant['suspicious_flags'] }}
+                                    <span class="ml-2 px-2 py-0.5 text-xs bg-rose-100 text-rose-800 border border-rose-200 rounded-md font-bold">
+                                        Indikator: {{ $participant['suspicious_flags'] }}
                                     </span>
                                 @endif
                             </td>
                             <td class="px-6 py-4">
-                                <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-slate-100 text-slate-800">
+                                <span class="px-2.5 py-0.5 text-xs font-bold rounded-md bg-slate-100 text-slate-800">
                                     {{ $participant['status'] }}
                                 </span>
                             </td>
@@ -88,7 +88,7 @@
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex items-center justify-end gap-3">
-                                    <a href="{{ route('kiosk.show', $participant['attempt_id']) }}" target="_blank" class="text-gold-700 hover:text-gold-900 font-semibold text-xs">Kiosk</a>
+                                    <a href="{{ route('kiosk.show', $participant['attempt_id']) }}" target="_blank" class="text-gold-700 hover:text-gold-900 font-semibold text-xs">Mode Fokus</a>
                                     @if($participant['status'] !== 'not_started')
                                     <form action="{{ route('monitoring.reset', $participant['attempt_id']) }}" method="POST" onsubmit="return confirm('Reset percobaan ini?')">
                                         @csrf
@@ -108,19 +108,19 @@
     </noscript>
 
     <!-- Activity and Incident Logs Section -->
-    <div class="mt-8 bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
-        <div class="p-4 sm:p-5 border-b border-slate-200 bg-slate-50/70 flex flex-wrap items-center justify-between gap-2">
+    <div class="mt-6 bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div class="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex flex-wrap items-center justify-between gap-2">
             <div>
-                <h3 class="font-bold text-slate-900 text-sm tracking-tight">Log Kejadian &amp; Aktivitas Peserta</h3>
-                <p class="text-xs text-slate-500">Pencatatan pelanggaran tab, blur jendela, dan re-koneksi jaringan</p>
+                <h2 class="font-bold text-slate-900 text-sm tracking-tight">Log Kejadian &amp; Aktivitas Peserta</h2>
+                <p class="text-xs text-slate-500">Pencatatan perpindahan tab, keluar layar penuh, dan aktivitas sesi ujian</p>
             </div>
-            <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 border border-slate-200">
+            <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 border border-slate-200 tabular-nums">
                 {{ $activityLogs->count() }} log terakhir
             </span>
         </div>
         <div class="divide-y divide-slate-100 max-h-96 overflow-y-auto text-sm">
             @forelse($activityLogs as $log)
-            <div class="px-4 sm:px-5 py-3 flex items-start gap-3 hover:bg-slate-50/60 transition">
+            <div class="px-4 sm:px-5 py-3 flex items-start gap-3 hover:bg-slate-50 transition">
                 <span class="mt-1.5 w-2 h-2 rounded-full shrink-0 {{ $log->action === 'suspicious_activity' ? 'bg-rose-500 ring-2 ring-rose-300' : 'bg-brand-600' }}"></span>
                 <div class="flex-1 min-w-0">
                     <div class="flex flex-wrap items-center gap-2">
@@ -132,13 +132,13 @@
                         ])>
                             {{ $log->action }}
                         </span>
-                        <span class="text-[11px] font-mono text-slate-400 ml-auto">{{ $log->created_at?->format('H:i:s') }} WIB</span>
+                        <span class="text-[11px] font-mono text-slate-400 ml-auto tabular-nums">{{ $log->created_at?->format('H:i:s') }} WIB</span>
                     </div>
                     <p class="text-xs text-slate-600 mt-1 break-words">{{ $log->description }}</p>
                 </div>
             </div>
             @empty
-            <p class="px-5 py-8 text-center text-slate-400 text-xs">Belum ada kejadian mencurigakan yang tercatat.</p>
+            <p class="px-5 py-8 text-center text-slate-400 text-xs">Belum ada aktivitas pelanggaran fokus yang tercatat.</p>
             @endforelse
         </div>
     </div>

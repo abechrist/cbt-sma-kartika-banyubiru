@@ -1,27 +1,27 @@
 <x-layouts.app :title="'Bank Soal'">
     <!-- Top Action Header -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-            <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">Bank Soal Ujian</h1>
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight leading-tight">Bank Soal Ujian</h1>
             <p class="text-xs sm:text-sm text-slate-500 mt-1 font-medium">Koleksi butir soal multi-tipe (Pilihan Ganda, Benar/Salah, Menjodohkan, Esai) terstandar.</p>
         </div>
         <div class="flex items-center gap-2.5">
-            <a href="{{ route('import_export') }}" class="px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition border border-slate-200/80 shadow-2xs">
+            <a href="{{ route('import_export') }}" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition border border-slate-200">
                 Import Soal
             </a>
-            <a href="{{ route('questions.create') }}" class="px-5 py-2.5 rounded-2xl bg-brand-900 hover:bg-brand-950 text-white font-extrabold text-xs shadow-md hover:shadow-lg btn-glow-brand transition-all duration-150 flex items-center gap-2">
-                <span class="text-base font-black leading-none">+</span>
+            <a href="{{ route('questions.create') }}" class="px-5 py-2.5 rounded-xl bg-brand-900 hover:bg-brand-950 text-white font-bold text-xs shadow-xs transition flex items-center gap-2">
+                <span class="text-base font-bold leading-none">+</span>
                 <span>Tambah Soal Baru</span>
             </a>
         </div>
     </div>
 
-    <!-- Filter Bar (Modern Bento Shell) -->
-    <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/90 mb-8">
+    <!-- Filter Bar -->
+    <div class="bg-white p-5 rounded-xl shadow-xs border border-slate-200 mb-6">
         <form method="GET" class="flex flex-wrap items-end gap-3.5">
             <div class="w-full sm:w-48">
-                <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Mata Pelajaran</label>
-                <select name="subject_id" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-2xl text-xs text-slate-800 font-semibold focus:ring-2 focus:ring-brand-700 focus:bg-white outline-none transition">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Mata Pelajaran</label>
+                <select name="subject_id" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 font-semibold focus:ring-2 focus:ring-brand-700 focus:bg-white outline-none transition">
                     <option value="">Semua Mapel</option>
                     @foreach($subjects as $subject)
                         <option value="{{ $subject->id }}" {{ request('subject_id') == $subject->id ? 'selected' : '' }}>
@@ -31,8 +31,8 @@
                 </select>
             </div>
             <div class="w-full sm:w-36">
-                <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Kelas</label>
-                <select name="class_id" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-2xl text-xs text-slate-800 font-semibold focus:ring-2 focus:ring-brand-700 focus:bg-white outline-none transition">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Kelas</label>
+                <select name="class_id" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 font-semibold focus:ring-2 focus:ring-brand-700 focus:bg-white outline-none transition">
                     <option value="">Semua Kelas</option>
                     @foreach($classes as $class)
                         <option value="{{ $class->id }}" {{ request('class_id') == $class->id ? 'selected' : '' }}>
@@ -42,8 +42,8 @@
                 </select>
             </div>
             <div class="w-full sm:w-40">
-                <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Tipe Soal</label>
-                <select name="type" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-2xl text-xs text-slate-800 font-semibold focus:ring-2 focus:ring-brand-700 focus:bg-white outline-none transition">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Tipe Soal</label>
+                <select name="type" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 font-semibold focus:ring-2 focus:ring-brand-700 focus:bg-white outline-none transition">
                     <option value="">Semua Tipe</option>
                     @foreach($types as $key => $label)
                         <option value="{{ $key }}" {{ request('type') == $key ? 'selected' : '' }}>
@@ -53,8 +53,8 @@
                 </select>
             </div>
             <div class="w-full sm:w-32">
-                <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Kesulitan</label>
-                <select name="difficulty" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-2xl text-xs text-slate-800 font-semibold focus:ring-2 focus:ring-brand-700 focus:bg-white outline-none transition">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Kesulitan</label>
+                <select name="difficulty" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 font-semibold focus:ring-2 focus:ring-brand-700 focus:bg-white outline-none transition">
                     <option value="">Semua</option>
                     <option value="easy" {{ request('difficulty') == 'easy' ? 'selected' : '' }}>Mudah</option>
                     <option value="medium" {{ request('difficulty') == 'medium' ? 'selected' : '' }}>Sedang</option>
@@ -62,23 +62,23 @@
                 </select>
             </div>
             <div class="flex-1 min-w-[200px]">
-                <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Cari Soal</label>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Cari Soal</label>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Ketik kata kunci isi soal..."
-                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-2xl text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-700 outline-none transition">
+                    class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-700 outline-none transition">
             </div>
             <div class="flex items-center gap-2">
-                <button type="submit" class="px-5 py-2.5 rounded-2xl bg-brand-900 hover:bg-brand-950 text-white font-extrabold text-xs shadow-md transition">
+                <button type="submit" class="px-5 py-2 rounded-xl bg-brand-900 hover:bg-brand-950 text-white font-bold text-xs shadow-xs transition">
                     Filter
                 </button>
-                <a href="{{ route('questions.index') }}" class="px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs transition">
+                <a href="{{ route('questions.index') }}" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs transition">
                     Reset
                 </a>
             </div>
         </form>
     </div>
 
-    <!-- Questions Table (Modern Card Presentation) -->
-    <div class="bg-white rounded-3xl shadow-sm border border-slate-200/90 overflow-hidden mb-8">
+    <!-- Questions Table -->
+    <div class="bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden mb-8">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-slate-100 text-sm">
                 <thead class="bg-slate-50/70 text-slate-600 text-xs uppercase tracking-wider font-bold">

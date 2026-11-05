@@ -47,6 +47,8 @@ class User extends Authenticatable
 
     public const ROLE_WALI_KELAS = 'wali_kelas';
 
+    public const ROLE_KOORDINATOR_KURIKULUM = 'koordinator_kurikulum';
+
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
@@ -94,7 +96,22 @@ class User extends Authenticatable
 
     public function isGuru(): bool
     {
-        return $this->role?->name === self::ROLE_GURU;
+        return in_array($this->role?->name, [self::ROLE_GURU, self::ROLE_KOORDINATOR_KURIKULUM]);
+    }
+
+    public function isKoordinatorKurikulum(): bool
+    {
+        return $this->role?->name === self::ROLE_KOORDINATOR_KURIKULUM;
+    }
+
+    public function canSuperviseCurriculum(): bool
+    {
+        return in_array($this->role?->name, [
+            self::ROLE_SUPER_ADMIN,
+            self::ROLE_ADMIN,
+            self::ROLE_KEPALA_SEKOLAH,
+            self::ROLE_KOORDINATOR_KURIKULUM,
+        ]);
     }
 
     public function isSiswa(): bool
@@ -123,11 +140,17 @@ class User extends Authenticatable
             self::ROLE_SUPER_ADMIN,
             self::ROLE_ADMIN,
             self::ROLE_GURU,
+            self::ROLE_KOORDINATOR_KURIKULUM,
             self::ROLE_KEPALA_SEKOLAH,
             self::ROLE_PROKTOR,
             self::ROLE_SISWA,
             self::ROLE_WALI_KELAS,
         ]);
+    }
+
+    public function rpps(): HasMany
+    {
+        return $this->hasMany(Rpp::class, 'teacher_id');
     }
 
     public function teachingCourses(): HasMany

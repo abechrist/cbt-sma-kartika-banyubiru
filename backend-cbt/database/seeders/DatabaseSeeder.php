@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ExamSeeder::class,
             ExamSessionSeeder::class,
             SampleDatasetSeeder::class,
+            TeacherMasterSeeder::class,
         ]);
     }
 }

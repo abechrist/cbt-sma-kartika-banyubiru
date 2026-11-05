@@ -13,7 +13,7 @@
     </div>
 
     <!-- Filter Bar -->
-    <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-xs border border-slate-200 mb-6">
+    <div class="bg-white p-4 sm:p-5 rounded-xl shadow-xs border border-slate-200 mb-6">
         <form method="GET" class="flex flex-wrap items-end gap-3">
             <div class="w-full sm:w-60">
                 <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Paket Ujian</label>
@@ -54,7 +54,7 @@
     </div>
 
     <!-- Table & Cards Container -->
-    <div class="bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden">
         <!-- Mobile Cards List (Stacked & thumb-friendly on 360px) -->
         <div class="block md:hidden divide-y divide-slate-100 p-3">
             @forelse($results as $result)

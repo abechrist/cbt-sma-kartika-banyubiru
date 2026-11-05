@@ -42,8 +42,64 @@
         </div>
     </div>
 
-    <!-- Main Content Container with Generous Padding -->
-    <div class="bg-white rounded-3xl shadow-sm border border-slate-200/90 p-6 sm:p-8">
+    <!-- Supervisi Koordinator Kurikulum Banner & Form -->
+    @if(session('success'))
+        <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs sm:text-sm font-bold flex items-center gap-2.5">
+            <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+
+    <div class="bg-white rounded-xl border border-slate-200 p-5 sm:p-6 mb-6">
+        <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-5">
+            <div class="space-y-1.5 flex-1">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="text-xs font-black uppercase tracking-wider text-slate-600">Status Supervisi Kurikulum:</span>
+                    @if($rpp->review_status === 'approved')
+                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">✓ Disetujui Koordinator Kurikulum</span>
+                    @elseif($rpp->review_status === 'revision_needed')
+                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-rose-50 text-rose-800 border border-rose-200">! Perlu Revisi</span>
+                    @else
+                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">Menunggu Review Koordinator</span>
+                    @endif
+                </div>
+                <p class="text-xs text-slate-600">
+                    Guru Penyusun: <strong class="text-slate-900">{{ $rpp->teacher->name ?? '-' }}</strong>
+                    @if($rpp->reviewer)
+                        • Ditinjau oleh: <strong class="text-slate-900">{{ $rpp->reviewer->name }}</strong>
+                        @if($rpp->reviewed_at)
+                            ({{ $rpp->reviewed_at->format('d/m/Y H:i') }})
+                        @endif
+                    @endif
+                </p>
+                @if($rpp->review_notes)
+                    <div class="mt-2 p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800">
+                        <span class="font-bold">Catatan Supervisi:</span> {{ $rpp->review_notes }}
+                    </div>
+                @endif
+            </div>
+
+            @if(auth()->user()?->canSuperviseCurriculum())
+                <form action="{{ route('curriculum.rpps.review', $rpp) }}" method="POST" class="w-full lg:w-96 bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2.5 shrink-0">
+                    @csrf
+                    <div class="text-xs font-black text-slate-900">Evaluasi Supervisi Koordinator Kurikulum</div>
+                    <select name="review_status" aria-label="Status Supervisi RPP" class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900">
+                        <option value="pending" @selected($rpp->review_status === 'pending')>Menunggu Review</option>
+                        <option value="approved" @selected($rpp->review_status === 'approved')>✓ Disetujui (Layak Dilaksanakan)</option>
+                        <option value="revision_needed" @selected($rpp->review_status === 'revision_needed')>! Perlu Revisi</option>
+                    </select>
+                    <textarea name="review_notes" rows="2" placeholder="Tambahkan catatan supervisi untuk guru..."
+                        class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs text-slate-900">{{ $rpp->review_notes }}</textarea>
+                    <button type="submit" class="w-full py-2 px-3 rounded-lg bg-brand-900 hover:bg-brand-950 text-white font-bold text-xs transition">
+                        Simpan Keputusan Supervisi
+                    </button>
+                </form>
+            @endif
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-6 sm:p-8">
         <!-- Modern Segmented Tabs Bar -->
         <div class="bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/80 flex flex-col sm:flex-row gap-1.5 sm:gap-2 mb-8">
             <button type="button" onclick="switchRppTab('overview')" id="tab-btn-overview"

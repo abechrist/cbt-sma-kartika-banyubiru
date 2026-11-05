@@ -22,6 +22,7 @@ class ExamPolicy
             User::ROLE_SUPER_ADMIN,
             User::ROLE_ADMIN,
             User::ROLE_GURU,
+            User::ROLE_KOORDINATOR_KURIKULUM,
             User::ROLE_KEPALA_SEKOLAH,
             User::ROLE_PROKTOR,
             User::ROLE_WALI_KELAS,
@@ -30,6 +31,10 @@ class ExamPolicy
 
     public function view(User $user, Exam $exam): bool
     {
+        if ($user->isKoordinatorKurikulum()) {
+            return true;
+        }
+
         if ($user->isGuru()) {
             return $exam->created_by === $user->id
                 || $user->subjects->contains($exam->subject_id);
@@ -44,6 +49,7 @@ class ExamPolicy
             User::ROLE_SUPER_ADMIN,
             User::ROLE_ADMIN,
             User::ROLE_GURU,
+            User::ROLE_KOORDINATOR_KURIKULUM,
         ]);
     }
 

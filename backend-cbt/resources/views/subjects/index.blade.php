@@ -1,18 +1,18 @@
 <x-layouts.app :title="'Mata Pelajaran'">
     <!-- Top Action Header -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-            <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">Mata Pelajaran Kurikulum</h1>
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight leading-tight">Mata Pelajaran Kurikulum</h1>
             <p class="text-xs sm:text-sm text-slate-500 mt-1 font-medium">Daftar mata pelajaran, kode bidang studi, dan penugasan guru pengampu utama.</p>
         </div>
-        <a href="{{ route('subjects.create') }}" class="px-5 py-2.5 rounded-2xl bg-brand-900 hover:bg-brand-950 text-white font-extrabold text-xs shadow-md hover:shadow-lg btn-glow-brand transition-all duration-150 flex items-center gap-2">
-            <span class="text-base font-black leading-none">+</span>
+        <a href="{{ route('subjects.create') }}" class="px-5 py-2.5 rounded-xl bg-brand-900 hover:bg-brand-950 text-white font-bold text-xs shadow-xs transition flex items-center gap-2">
+            <span class="text-base font-bold leading-none">+</span>
             <span>Tambah Mata Pelajaran</span>
         </a>
     </div>
 
     <!-- Table Card Container -->
-    <div class="bg-white rounded-3xl shadow-sm border border-slate-200/90 overflow-hidden mb-8">
+    <div class="bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden mb-8">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-slate-100 text-sm">
                 <thead class="bg-slate-50/70 text-slate-600 text-xs uppercase tracking-wider font-bold">

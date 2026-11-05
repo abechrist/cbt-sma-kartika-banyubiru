@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\Exam;
 use App\Models\ExamAttempt;
 use App\Models\ExamResult;
 use App\Models\ExamSession;
+use App\Models\LearningMaterial;
 use App\Models\Question;
+use App\Models\Rpp;
 use App\Models\StudentClass;
 use App\Models\Subject;
 use App\Models\User;
@@ -39,13 +42,43 @@ class DashboardController extends Controller
             case User::ROLE_ADMIN:
                 $data['totalUsers'] = User::count();
                 $data['totalStudents'] = User::whereHas('role', fn ($q) => $q->where('name', User::ROLE_SISWA))->count();
-                $data['totalTeachers'] = User::whereHas('role', fn ($q) => $q->where('name', User::ROLE_GURU))->count();
+                $data['totalTeachers'] = User::whereHas('role', fn ($q) => $q->whereIn('name', [User::ROLE_GURU, User::ROLE_KOORDINATOR_KURIKULUM]))->count();
                 $data['totalClasses'] = StudentClass::count();
                 $data['totalSubjects'] = Subject::count();
                 $data['totalQuestions'] = Question::count();
                 $data['totalExams'] = Exam::count();
                 $data['activeSessions'] = ExamSession::whereIn('status', [ExamSession::STATUS_OPEN, ExamSession::STATUS_IN_PROGRESS])->count();
                 $data['recentSessions'] = ExamSession::with('exam')->latest()->limit(5)->get();
+                break;
+
+            case User::ROLE_KOORDINATOR_KURIKULUM:
+                $data['totalTeachers'] = User::whereHas('role', fn ($q) => $q->whereIn('name', [User::ROLE_GURU, User::ROLE_KOORDINATOR_KURIKULUM]))
+                    ->where('email', '!=', 'wakakur@kartika.sch.id')
+                    ->count();
+                $data['totalCourses'] = Course::where('is_active', true)->count();
+                $data['coursesWithMaterials'] = Course::where('is_active', true)
+                    ->where(function ($q) {
+                        $q->whereHas('materials')->orWhereHas('assignments');
+                    })->count();
+                $data['lmsActivityRate'] = $data['totalCourses'] > 0
+                    ? (int) round(($data['coursesWithMaterials'] / $data['totalCourses']) * 100)
+                    : 0;
+                $data['totalRpps'] = Rpp::count();
+                $data['approvedRpps'] = Rpp::where('review_status', 'approved')->count();
+                $data['revisionRpps'] = Rpp::where('review_status', 'revision_needed')->count();
+                $data['pendingReviewRpps'] = Rpp::where('review_status', 'pending')->count();
+                $data['totalMaterials'] = LearningMaterial::count();
+                $data['totalQuestions'] = Question::count();
+                $data['totalExams'] = Exam::count();
+                $data['recentRpps'] = Rpp::with(['subject', 'classGroup', 'teacher'])->latest()->limit(5)->get();
+
+                // Statistik mengajar pribadi Koordinator Kurikulum (Opsi A)
+                $data['myQuestions'] = Question::where('created_by', $user->id)->count();
+                $data['myExams'] = Exam::where('created_by', $user->id)->count();
+                $data['mySessions'] = ExamSession::whereHas('exam', fn ($q) => $q->where('created_by', $user->id))->latest()->limit(5)->get();
+                $data['pendingGrading'] = ExamResult::where('grading_status', 'partial')
+                    ->whereHas('attempt.session.exam', fn ($q) => $q->where('created_by', $user->id))
+                    ->count();
                 break;
 
             case User::ROLE_GURU:

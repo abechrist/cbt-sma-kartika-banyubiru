@@ -21,6 +21,11 @@ class CheckRole
             return $next($request);
         }
 
+        // Opsi A: Koordinator Kurikulum juga mewarisi seluruh hak akses Guru Pengampu
+        if ($userRole === \App\Models\User::ROLE_KOORDINATOR_KURIKULUM && in_array(\App\Models\User::ROLE_GURU, $roles)) {
+            return $next($request);
+        }
+
         // Redirect to appropriate dashboard based on role
         return redirect()->route('dashboard');
     }

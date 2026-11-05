@@ -10,49 +10,42 @@
             <span class="text-slate-800 font-bold truncate">{{ $course->subject->name }}</span>
         </div>
 
-        <!-- Course Institutional Hero Banner -->
-        <div class="text-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 mb-6 sm:mb-8 shadow-lg border border-brand-800 relative overflow-hidden" style="background: linear-gradient(135deg, #061d13 0%, #0b3120 50%, #061d13 100%);">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-5 sm:gap-6 relative z-10">
+        <!-- Course Header Card (School Assessment UI Kit) -->
+        <div class="bg-white rounded-xl p-5 sm:p-6 mb-6 shadow-xs border border-slate-200">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-5 sm:gap-6">
                 <div>
-                    <div class="flex flex-wrap items-center gap-2 mb-2 sm:mb-2.5">
-                        <span class="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[11px] sm:text-xs font-black bg-gold-400 text-brand-950 border border-gold-300 shadow-xs">
+                    <div class="flex flex-wrap items-center gap-2 mb-2">
+                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-brand-50 text-brand-900 border border-brand-200">
                             Kelas {{ $course->studentClass->name ?? 'Semua' }}
                         </span>
-                        <span class="text-xs text-gold-200 font-mono font-bold">T.A. {{ $course->academic_year }} (Semester {{ ucfirst($course->semester) }})</span>
+                        <span class="text-xs text-slate-500 font-mono font-semibold">T.A. {{ $course->academic_year }} (Semester {{ ucfirst($course->semester) }})</span>
                     </div>
-                    <h1 class="text-xl sm:text-3xl font-black tracking-tight text-white leading-tight">{{ $course->subject->name }}</h1>
-                    <p class="text-xs text-brand-100 mt-1 sm:mt-1.5 flex items-center gap-2 font-medium">
-                        <span>Guru Pengampu: <strong class="text-white font-bold">{{ $course->teacher->name }}</strong></span>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 leading-tight">{{ $course->subject->name }}</h1>
+                    <p class="text-xs text-slate-600 mt-1 flex items-center gap-2 font-medium">
+                        <span>Guru Pengampu: <strong class="text-slate-900 font-bold">{{ $course->teacher->name }}</strong></span>
                     </p>
                     @if($course->description)
-                        <p class="text-xs text-brand-100 mt-2 max-w-2xl leading-relaxed font-normal">{{ $course->description }}</p>
+                        <p class="text-xs text-slate-500 mt-2 max-w-2xl leading-relaxed">{{ $course->description }}</p>
                     @endif
                 </div>
 
                 <!-- Quick Stats Badge -->
-                <div class="w-full sm:w-auto flex items-center justify-around sm:justify-start gap-2 sm:gap-3 bg-brand-900/90 p-3 sm:p-3.5 rounded-2xl border border-brand-700 shadow-xs shrink-0">
-                    <div class="text-center px-2.5 sm:px-3 border-r border-brand-800">
-                        <span class="text-lg sm:text-xl font-black text-gold-300 font-mono">{{ $course->materials->count() }}</span>
-                        <p class="text-[10px] text-brand-200 uppercase font-bold tracking-wider">Materi</p>
+                <div class="w-full sm:w-auto flex items-center justify-around sm:justify-start gap-2 sm:gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 shrink-0">
+                    <div class="text-center px-3 border-r border-slate-200">
+                        <span class="text-lg font-bold text-slate-900 font-mono tabular-nums">{{ $course->materials->count() }}</span>
+                        <p class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Materi</p>
                     </div>
-                    <div class="text-center px-2.5 sm:px-3 border-r border-brand-800">
-                        <span class="text-lg sm:text-xl font-black text-amber-300 font-mono">{{ $course->assignments->count() }}</span>
-                        <p class="text-[10px] text-brand-200 uppercase font-bold tracking-wider">Tugas</p>
+                    <div class="text-center px-3 border-r border-slate-200">
+                        <span class="text-lg font-bold text-slate-900 font-mono tabular-nums">{{ $course->assignments->count() }}</span>
+                        <p class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Tugas</p>
                     </div>
-                    <div class="text-center px-2.5 sm:px-3">
-                        <span class="text-lg sm:text-xl font-black text-emerald-300 font-mono">{{ $course->studentClass->students->count() ?? 0 }}</span>
-                        <p class="text-[10px] text-brand-200 uppercase font-bold tracking-wider">Siswa</p>
+                    <div class="text-center px-3">
+                        <span class="text-lg font-bold text-slate-900 font-mono tabular-nums">{{ $course->studentClass->students->count() ?? 0 }}</span>
+                        <p class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Siswa</p>
                     </div>
                 </div>
             </div>
         </div>
-
-        @if(session('success'))
-            <div class="mb-5 sm:mb-6 p-3.5 sm:p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm flex items-center gap-2">
-                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                <span>{{ session('success') }}</span>
-            </div>
-        @endif
 
         <!-- LMS Section Tabs -->
         <div class="border-b border-slate-200 mb-6 sm:mb-8 flex gap-3 sm:gap-6 text-xs sm:text-sm font-bold overflow-x-auto pb-1 no-scrollbar">

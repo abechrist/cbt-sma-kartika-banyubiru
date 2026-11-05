@@ -8,7 +8,6 @@ function bootEcho() {
 
     window.Pusher = Pusher;
 
-    // Mode Pusher (production split domain)
     if (window.__PUSHER_APP_KEY__) {
         return new Echo({
             broadcaster: 'pusher',
@@ -25,8 +24,7 @@ function bootEcho() {
         });
     }
 
-    // Fallback Reverb (local development)
-    if (!cfg) return null;
+    if (!cfg || !cfg.appKey) return null;
 
     return new Echo({
         broadcaster: 'reverb',
@@ -58,10 +56,10 @@ const STATUS_LABELS = {
 
 const STATUS_COLORS = {
     not_started: 'bg-slate-100 text-slate-700 border border-slate-200',
-    in_progress: 'bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold',
-    submitted: 'bg-brand-100 text-brand-900 border border-brand-200 font-semibold',
-    auto_submitted: 'bg-amber-100 text-amber-900 border border-amber-200',
-    expired: 'bg-rose-100 text-rose-800 border border-rose-200',
+    in_progress: 'bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold',
+    submitted: 'bg-brand-50 text-brand-900 border border-brand-200 font-semibold',
+    auto_submitted: 'bg-amber-50 text-amber-900 border border-amber-200',
+    expired: 'bg-rose-50 text-rose-800 border border-rose-200',
     cancelled: 'bg-slate-200 text-slate-600',
 };
 
@@ -172,9 +170,6 @@ function LiveMonitoring({ initialParticipants, sessionId, examQuestionsCount }) 
         return now - lastSeen < OFFLINE_AFTER_MS;
     };
 
-    const statusCount = (status) =>
-        participants.filter((p) => p.status === status || (status === 'done' && ['submitted', 'auto_submitted'].includes(p.status))).length;
-
     const timeLeft = (p) => {
         if (!p.countdownTo || p.status !== 'in_progress') return null;
         const seconds = Math.max(0, Math.floor((p.countdownTo - now) / 1000));
@@ -191,43 +186,37 @@ function LiveMonitoring({ initialParticipants, sessionId, examQuestionsCount }) 
 
     return (
         <>
-            {!connected && (
-                <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm rounded-lg">
-                    Mode siaga — menunggu koneksi realtime (mulai <span className="font-mono">php artisan reverb:start</span>).
-                </div>
-            )}
-
-            <div className="bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
-                <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50/80 flex flex-wrap items-center justify-between gap-4">
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+                <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex flex-wrap items-center justify-between gap-4">
                     <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-6 w-full sm:w-auto">
-                        <div className="text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-xl border sm:border-0 border-slate-200/80">
-                            <p className="text-2xl font-extrabold font-mono text-slate-900 leading-tight">{total}</p>
+                        <div className="text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-lg border sm:border-0 border-slate-200">
+                            <p className="text-2xl font-extrabold font-mono tabular-nums text-slate-900 leading-tight">{total}</p>
                             <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">Total</p>
                         </div>
-                        <div className="text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-xl border sm:border-0 border-slate-200/80">
-                            <p className="text-2xl font-extrabold font-mono text-emerald-600 leading-tight">{online}</p>
-                            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">Online</p>
+                        <div className="text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-lg border sm:border-0 border-slate-200">
+                            <p className="text-2xl font-extrabold font-mono tabular-nums text-emerald-600 leading-tight">{online}</p>
+                            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">Aktif</p>
                         </div>
-                        <div className="text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-xl border sm:border-0 border-slate-200/80">
-                            <p className="text-2xl font-extrabold font-mono text-brand-800 leading-tight">{inProgress}</p>
+                        <div className="text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-lg border sm:border-0 border-slate-200">
+                            <p className="text-2xl font-extrabold font-mono tabular-nums text-brand-800 leading-tight">{inProgress}</p>
                             <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">Mengerjakan</p>
                         </div>
-                        <div className="text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-xl border sm:border-0 border-slate-200/80">
-                            <p className="text-2xl font-extrabold font-mono text-blue-600 leading-tight">{done}</p>
+                        <div className="text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-lg border sm:border-0 border-slate-200">
+                            <p className="text-2xl font-extrabold font-mono tabular-nums text-blue-600 leading-tight">{done}</p>
                             <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">Selesai</p>
                         </div>
-                        <div className="col-span-2 sm:col-span-1 text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-xl border sm:border-0 border-slate-200/80">
-                            <p className={`text-2xl font-extrabold font-mono leading-tight ${suspicious > 0 ? 'text-rose-600' : 'text-slate-400'}`}>{suspicious}</p>
-                            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">⚠ Indikator</p>
+                        <div className="col-span-2 sm:col-span-1 text-center p-2 sm:p-0 bg-white sm:bg-transparent rounded-lg border sm:border-0 border-slate-200">
+                            <p className={`text-2xl font-extrabold font-mono tabular-nums leading-tight ${suspicious > 0 ? 'text-rose-600' : 'text-slate-400'}`}>{suspicious}</p>
+                            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">Indikator Fokus</p>
                         </div>
                     </div>
-                    <span className={`px-3 py-1 text-xs font-bold rounded-full border flex items-center gap-1.5 ${connected ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-amber-100 text-amber-800 border-amber-200'}`}>
-                        <span className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-500 animate-ping' : 'bg-amber-500'}`}></span>
-                        {connected ? 'REAL-TIME AKTIF' : 'SIAGA LOKAL'}
+                    <span className={`px-3 py-1 text-xs font-bold rounded-md border flex items-center gap-1.5 ${connected ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-slate-100 text-slate-700 border-slate-200'}`}>
+                        <span className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-500 animate-ping' : 'bg-slate-400'}`}></span>
+                        {connected ? 'PEMANTAUAN LANGSUNG' : 'MODE STANDAR'}
                     </span>
                 </div>
 
-                {/* Mobile Participant Cards (Stacked & responsive on 360px) */}
+                {/* Mobile Participant Cards */}
                 <div className="block md:hidden divide-y divide-slate-100 p-3">
                     {participants.length === 0 ? (
                         <div className="p-6 text-center text-slate-400 text-xs">
@@ -235,31 +224,31 @@ function LiveMonitoring({ initialParticipants, sessionId, examQuestionsCount }) 
                         </div>
                     ) : (
                         participants.map((p, i) => (
-                            <div key={p.attempt_id} className={`p-3.5 rounded-2xl mb-2.5 border transition ${isOnline(p) ? 'bg-white border-slate-200 shadow-2xs' : 'bg-rose-50/50 border-rose-200'}`}>
+                            <div key={p.attempt_id} className={`p-3.5 rounded-xl mb-2.5 border transition ${isOnline(p) ? 'bg-white border-slate-200' : 'bg-rose-50/40 border-rose-200'}`}>
                                 <div className="flex items-start justify-between gap-2 mb-2">
                                     <div className="min-w-0">
                                         <div className="flex items-center gap-1.5 flex-wrap">
                                             <span className="text-xs font-mono font-bold text-slate-400">#{i + 1}</span>
                                             <span className="font-bold text-sm text-slate-900 truncate">{p.student_name}</span>
                                             {(p.suspicious_flags ?? 0) > 0 && (
-                                                <span className="px-2 py-0.5 text-[10px] font-bold bg-rose-100 text-rose-800 rounded-full border border-rose-200">
-                                                    ⚠ {p.suspicious_flags}
+                                                <span className="px-2 py-0.5 text-[10px] font-bold bg-rose-100 text-rose-800 rounded-md border border-rose-200">
+                                                    Indikator: {p.suspicious_flags}
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500 font-mono">
+                                        <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500 font-mono tabular-nums">
                                             <span>Mulai: {p.started_at ? new Date(p.started_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}</span>
                                             <span>•</span>
                                             <span>Sisa: <strong className="text-slate-800 font-bold">{timeLeft(p) ?? '-'}</strong></span>
                                         </div>
                                     </div>
                                     <div className="flex flex-col items-end gap-1 shrink-0">
-                                        <span className={`px-2 py-0.5 text-xs rounded-full ${STATUS_COLORS[p.status] ?? 'bg-gray-100 text-gray-800'}`}>
+                                        <span className={`px-2 py-0.5 text-xs rounded-md ${STATUS_COLORS[p.status] ?? 'bg-slate-100 text-slate-800'}`}>
                                             {STATUS_LABELS[p.status] ?? p.status}
                                         </span>
                                         {p.status === 'in_progress' && (
-                                            <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded ${isOnline(p) ? 'text-emerald-700 bg-emerald-50' : 'text-rose-700 bg-rose-50'}`}>
-                                                {isOnline(p) ? '● Online' : '○ Terputus'}
+                                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${isOnline(p) ? 'text-emerald-700 bg-emerald-50' : 'text-rose-700 bg-rose-50'}`}>
+                                                {isOnline(p) ? 'Aktif' : 'Terputus'}
                                             </span>
                                         )}
                                     </div>
@@ -269,13 +258,13 @@ function LiveMonitoring({ initialParticipants, sessionId, examQuestionsCount }) 
                                         <div className="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200">
                                             <div className="bg-brand-700 h-2 rounded-full" style={{ width: `${p.progress}%` }} />
                                         </div>
-                                        <span className="text-xs font-mono font-bold text-slate-700">{Math.round(p.progress)}%</span>
-                                        <span className="text-[11px] font-mono text-slate-400">({p.answers_count}/{examQuestionsCount})</span>
+                                        <span className="text-xs font-mono font-bold text-slate-700 tabular-nums">{Math.round(p.progress)}%</span>
+                                        <span className="text-[11px] font-mono text-slate-400 tabular-nums">({p.answers_count}/{examQuestionsCount})</span>
                                     </div>
                                     {p.status !== 'not_started' && (
                                         <form action={`/monitoring/${p.attempt_id}/reset`} method="POST" onSubmit={() => confirm('Reset percobaan ini?')}>
                                             <input type="hidden" name="_token" value={window.__CSRF__} />
-                                            <button type="submit" className="min-h-[36px] px-3 py-1 text-rose-600 hover:text-rose-800 font-bold text-xs rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 transition">Reset</button>
+                                            <button type="submit" className="min-h-[34px] px-3 py-1 text-rose-600 hover:text-rose-800 font-bold text-xs rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200 transition">Reset</button>
                                         </form>
                                     )}
                                 </div>
@@ -287,72 +276,72 @@ function LiveMonitoring({ initialParticipants, sessionId, examQuestionsCount }) 
                 {/* Desktop Table View */}
                 <div className="hidden md:block overflow-x-auto">
                     <table className="min-w-full divide-y divide-slate-200 text-sm">
-                        <thead className="bg-gray-50">
+                        <thead className="bg-slate-50">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Siswa</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Online</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jawaban</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sisa Waktu</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mulai</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">No</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Nama Siswa</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Status</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Koneksi</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Progres</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Jawaban</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Sisa Waktu</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Mulai</th>
+                                <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200">
+                        <tbody className="divide-y divide-slate-100">
                             {participants.length === 0 ? (
                                 <tr>
-                                    <td colSpan="9" className="px-6 py-8 text-center text-gray-500">
+                                    <td colSpan="9" className="px-6 py-8 text-center text-slate-500">
                                         Belum ada peserta. Menunggu siswa masuk ke sesi ini…
                                     </td>
                                 </tr>
                             ) : (
                                 participants.map((p, i) => (
-                                    <tr key={p.attempt_id} className={isOnline(p) ? '' : 'bg-red-50/40'}>
-                                        <td className="px-6 py-4">{i + 1}</td>
-                                        <td className="px-6 py-4 font-medium">
+                                    <tr key={p.attempt_id} className={isOnline(p) ? 'hover:bg-slate-50' : 'bg-rose-50/30'}>
+                                        <td className="px-6 py-3.5 font-mono text-xs text-slate-500 tabular-nums">{i + 1}</td>
+                                        <td className="px-6 py-3.5 font-semibold text-slate-900">
                                             {p.student_name}
                                             {(p.suspicious_flags ?? 0) > 0 && (
-                                                <span className="ml-2 px-2 py-0.5 text-xs bg-red-100 text-red-800 rounded-full">
-                                                    ⚠ {p.suspicious_flags}
+                                                <span className="ml-2 px-2 py-0.5 text-xs bg-rose-100 text-rose-800 border border-rose-200 rounded-md font-bold">
+                                                    Indikator: {p.suspicious_flags}
                                                 </span>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <span className={`px-2 py-1 text-xs rounded-full ${STATUS_COLORS[p.status] ?? 'bg-gray-100 text-gray-800'}`}>
+                                        <td className="px-6 py-3.5">
+                                            <span className={`px-2.5 py-0.5 text-xs rounded-md ${STATUS_COLORS[p.status] ?? 'bg-slate-100 text-slate-800'}`}>
                                                 {STATUS_LABELS[p.status] ?? p.status}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-3.5">
                                             {p.status === 'in_progress' ? (
                                                 isOnline(p) ? (
-                                                    <span className="text-green-600 font-medium">Online</span>
+                                                    <span className="text-emerald-700 font-semibold text-xs">Aktif</span>
                                                 ) : (
-                                                    <span className="text-red-600 font-medium">Terputus</span>
+                                                    <span className="text-rose-600 font-semibold text-xs">Terputus</span>
                                                 )
                                             ) : (
-                                                <span className="text-gray-400">-</span>
+                                                <span className="text-slate-400">-</span>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-3.5">
                                             <div className="flex items-center gap-2">
                                                 <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200">
                                                     <div className="bg-brand-700 h-2 rounded-full" style={{ width: `${p.progress}%` }} />
                                                 </div>
-                                                <span className="text-xs font-mono font-semibold text-slate-600">{Math.round(p.progress)}%</span>
+                                                <span className="text-xs font-mono font-semibold text-slate-600 tabular-nums">{Math.round(p.progress)}%</span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-xs font-mono">{p.answers_count} / {examQuestionsCount}</td>
-                                        <td className="px-6 py-4 text-xs font-mono font-bold text-slate-800">{timeLeft(p) ?? '-'}</td>
-                                        <td className="px-6 py-4 text-xs font-mono text-slate-500">
+                                        <td className="px-6 py-3.5 text-xs font-mono tabular-nums">{p.answers_count} / {examQuestionsCount}</td>
+                                        <td className="px-6 py-3.5 text-xs font-mono font-bold text-slate-800 tabular-nums">{timeLeft(p) ?? '-'}</td>
+                                        <td className="px-6 py-3.5 text-xs font-mono text-slate-500 tabular-nums">
                                             {p.started_at ? new Date(p.started_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-3.5">
                                             {p.status !== 'not_started' ? (
                                                 <form action={`/monitoring/${p.attempt_id}/reset`} method="POST" onSubmit={() => confirm('Reset percobaan ini?')}>
                                                     <input type="hidden" name="_token" value={window.__CSRF__} />
-                                                    <button type="submit" className="text-rose-600 hover:text-rose-800 font-semibold text-xs px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200 transition">Reset</button>
+                                                    <button type="submit" className="text-rose-600 hover:text-rose-800 font-semibold text-xs px-2.5 py-1 rounded-md bg-rose-50 hover:bg-rose-100 border border-rose-200 transition">Reset</button>
                                                 </form>
                                             ) : (
                                                 <span className="text-slate-300 text-xs">-</span>
@@ -366,35 +355,33 @@ function LiveMonitoring({ initialParticipants, sessionId, examQuestionsCount }) 
                 </div>
             </div>
 
-            <div className="mt-6 bg-white rounded-lg shadow overflow-hidden">
-                <div className="p-4 border-b bg-gray-50 flex items-center justify-between">
-                    <h3 className="font-bold text-gray-800">Log Aktivitas &amp; Mencurigakan</h3>
-                    <span className="text-xs text-gray-500">{logs.length} entri real-time</span>
-                </div>
-                <div className="divide-y divide-gray-100 max-h-96 overflow-y-auto">
-                    {logs.length === 0 ? (
-                        <p className="px-4 py-8 text-center text-gray-500 text-sm">Belum ada aktivitas real-time baru.</p>
-                    ) : (
-                        logs.map((l, i) => (
+            {logs.length > 0 && (
+                <div className="mt-6 bg-white rounded-xl border border-slate-200 overflow-hidden">
+                    <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+                        <h3 className="font-bold text-slate-800 text-sm">Pembaruan Aktivitas Langsung</h3>
+                        <span className="text-xs text-slate-500 font-mono tabular-nums">{logs.length} entri</span>
+                    </div>
+                    <div className="divide-y divide-slate-100 max-h-96 overflow-y-auto">
+                        {logs.map((l, i) => (
                             <div key={i} className="px-4 py-3 flex items-start gap-3 text-sm">
                                 <span
-                                    className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${l.suspicious ? 'bg-red-500' : 'bg-blue-400'}`}
+                                    className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${l.suspicious ? 'bg-rose-500' : 'bg-brand-600'}`}
                                 />
                                 <div className="flex-1">
-                                    <p className="text-gray-800">
-                                        <span className="font-medium">{l.student_name ?? 'Sistem'}</span>
-                                        <span className="text-gray-500">— {l.description}</span>
-                                        <span className="ml-2 px-2 py-0.5 text-xs rounded bg-gray-100 text-gray-600">{l.action}</span>
+                                    <p className="text-slate-800 text-xs">
+                                        <span className="font-semibold">{l.student_name ?? 'Sistem'}</span>
+                                        <span className="text-slate-500"> — {l.description}</span>
+                                        <span className="ml-2 px-2 py-0.5 text-[10px] rounded bg-slate-100 text-slate-600 font-mono">{l.action}</span>
                                     </p>
-                                    <p className="text-xs text-gray-400 mt-0.5">
+                                    <p className="text-[11px] text-slate-400 mt-0.5 font-mono tabular-nums">
                                         {l.created_at ? new Date(l.created_at).toLocaleTimeString('id-ID') : ''}
                                     </p>
                                 </div>
                             </div>
-                        ))
-                    )}
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
         </>
     );
 }

@@ -44,16 +44,16 @@
 </head>
 <body>
     <div class="no-print" style="margin-bottom: 24px; text-align: center;">
-        <button onclick="window.print()" style="padding: 10px 24px; background: #12472e; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            🖨 Cetak Lembar Token Peserta
+        <button onclick="window.print()" style="padding: 10px 24px; background: #12472e; color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+            <span>Cetak Lembar Token Peserta</span>
         </button>
     </div>
     
     <div class="header">
         <img src="{{ asset('images/logo-kartika.png') }}" alt="Logo Kartika Jaya" style="width: 54px; height: 54px; object-fit: contain; margin: 0 auto 8px auto; display: block;">
         <h1>SMA KARTIKA III-1 BANYUBIRU</h1>
-        <h2>LEMBAR TOKEN RUANG UJIAN: {{ $session->name }}</h2>
-        <p>{{ $session->exam->name }} • Ruang: {{ $session->room ?? 'Lab CBT' }} • Jadwal: {{ $session->start_at->format('d/m/Y H:i') }} - {{ $session->end_at->format('H:i') }} WIB</p>
+        <h2>LEMBAR TOKEN SESI UJIAN: {{ $session->name }}</h2>
+        <p>{{ $session->exam->name }} • Ruang / Kelas: {{ $session->room ?? 'Ruang Ujian' }} • Jadwal: {{ $session->start_at->format('d/m/Y H:i') }} - {{ $session->end_at->format('H:i') }} WIB</p>
     </div>
     
     <div class="grid">
@@ -61,7 +61,7 @@
         <div class="token-card">
             <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px;">
                 <img src="{{ asset('images/logo-kartika.png') }}" alt="Logo" style="width: 18px; height: 18px; object-fit: contain;">
-                <div class="school-title" style="margin-bottom: 0;">SMA KARTIKA III-1 CBT</div>
+                <div class="school-title" style="margin-bottom: 0;">SMA KARTIKA III-1 BANYUBIRU</div>
             </div>
             <div class="token">{{ $token->token }}</div>
             <div class="info">{{ $session->name }}</div>

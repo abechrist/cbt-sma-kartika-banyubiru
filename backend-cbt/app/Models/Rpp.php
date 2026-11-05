@@ -18,11 +18,16 @@ class Rpp extends Model
         'time_allocation',
         'rpp_data',
         'status',
+        'review_status',
+        'review_notes',
+        'reviewed_by',
+        'reviewed_at',
         'integrated_at',
     ];
 
     protected $casts = [
         'rpp_data' => 'array',
+        'reviewed_at' => 'datetime',
         'integrated_at' => 'datetime',
     ];
 
@@ -39,6 +44,11 @@ class Rpp extends Model
     public function teacher(): BelongsTo
     {
         return $this->belongsTo(User::class, 'teacher_id');
+    }
+
+    public function reviewer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
     }
 
     public function materials(): HasMany

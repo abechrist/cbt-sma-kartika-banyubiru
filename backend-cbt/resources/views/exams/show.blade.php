@@ -156,7 +156,7 @@
                                     <tr>
                                         <th class="px-4 py-3 text-left">Nama Sesi</th>
                                         <th class="px-4 py-3 text-left">Jadwal Sesi</th>
-                                        <th class="px-4 py-3 text-left">Ruang Lab</th>
+                                        <th class="px-4 py-3 text-left">Ruang / Kelas</th>
                                         <th class="px-4 py-3 text-left">Kapasitas</th>
                                         <th class="px-4 py-3 text-left">Status</th>
                                         <th class="px-4 py-3 text-right">Aksi</th>

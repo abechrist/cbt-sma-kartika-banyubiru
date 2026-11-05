@@ -18,6 +18,7 @@ class RoleSeeder extends Seeder
             [User::ROLE_PROKTOR, 'Proktor - Memantau jalannya ujian'],
             [User::ROLE_SISWA, 'Siswa - Mengikuti ujian'],
             [User::ROLE_WALI_KELAS, 'Wali Kelas - Melihat hasil siswa kelasnya'],
+            [User::ROLE_KOORDINATOR_KURIKULUM, 'Guru Koordinator Kurikulum - Mengajar serta memantau perencanaan & pelaksanaan kurikulum guru'],
         ];
 
         foreach ($roles as [$name, $description]) {

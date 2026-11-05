@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-slate-100">
+<html lang="id" class="bg-slate-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
@@ -88,7 +88,7 @@
         body.font-scale-lg .exam-text { font-size: 19px; line-height: 1.7; }
     </style>
 </head>
-<body class="min-h-full flex flex-col font-sans text-slate-900 bg-slate-100 font-scale-md no-pull-refresh"
+<body class="min-h-screen flex flex-col font-sans text-slate-900 bg-slate-100 font-scale-md"
     oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;" oncopy="return false;" oncut="return false;" onpaste="return false;">
 
     <!-- CBT Cockpit Top HUD Bar (Sleek & Mobile Optimized) -->
@@ -610,7 +610,7 @@
         if (kioskActive) {
             const badge = document.createElement('div');
             badge.id = 'kioskBadge';
-            badge.textContent = 'KIOSK LOCKDOWN AKTIF';
+            badge.textContent = 'MODE FOKUS UJIAN AKTIF';
             badge.style.cssText = 'position:fixed;bottom:12px;right:12px;z-index:9999;background:#12472e;color:#fff;' +
                 'padding:5px 12px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:0.05em;border:1px solid #d97706;pointer-events:none;';
             document.body.appendChild(badge);

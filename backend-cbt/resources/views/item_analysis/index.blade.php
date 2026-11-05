@@ -6,7 +6,7 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-xs border border-slate-200 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-slate-200 text-sm">
                 <thead class="bg-slate-50 text-slate-600 text-xs uppercase font-semibold">

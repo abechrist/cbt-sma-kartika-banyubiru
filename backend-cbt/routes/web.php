@@ -7,6 +7,7 @@ use App\Filament\Student\Pages\TokenEntry;
 use App\Http\Controllers\Academic\ClassController;
 use App\Http\Controllers\Academic\SubjectController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Curriculum\CurriculumMonitoringController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Examination\ExamController;
 use App\Http\Controllers\Examination\ExamSessionController;
@@ -28,8 +29,17 @@ use App\Http\Controllers\Rpp\RppController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => view('welcome'))->name('portal');
-Route::get('/portal', fn () => view('welcome'));
+Route::get('/', function () {
+    return auth()->check()
+        ? redirect()->route('dashboard')
+        : view('auth.login');
+})->name('portal');
+
+Route::get('/portal', function () {
+    return auth()->check()
+        ? redirect()->route('dashboard')
+        : view('auth.login');
+});
 
 // Authentication
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -154,6 +164,14 @@ Route::middleware('auth')->group(function () {
         Route::post('monitoring/{attempt}/reset', [MonitoringController::class, 'resetAttempt'])->name('monitoring.reset');
         Route::get('kiosk/launch', [KioskController::class, 'launch'])->name('kiosk.launch');
         Route::get('kiosk/{attempt}', [KioskController::class, 'show'])->name('kiosk.show');
+    });
+
+    // Supervisi & Pemantauan Kurikulum (Koordinator Kurikulum, Kepala Sekolah, Admin, Super Admin)
+    Route::middleware('role:super_admin,admin,kepala_sekolah,koordinator_kurikulum')->prefix('curriculum')->name('curriculum.')->group(function () {
+        Route::get('/', [CurriculumMonitoringController::class, 'index'])->name('index');
+        Route::get('/teachers/{teacher}', [CurriculumMonitoringController::class, 'showTeacher'])->name('teachers.show');
+        Route::post('/rpps/{rpp}/review', [CurriculumMonitoringController::class, 'reviewRpp'])->name('rpps.review');
+        Route::post('/assign-coordinator', [CurriculumMonitoringController::class, 'assignCoordinator'])->name('assign-coordinator');
     });
 
     // LMS (Learning Management System)

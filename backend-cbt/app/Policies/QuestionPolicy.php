@@ -22,12 +22,17 @@ class QuestionPolicy
             User::ROLE_SUPER_ADMIN,
             User::ROLE_ADMIN,
             User::ROLE_GURU,
+            User::ROLE_KOORDINATOR_KURIKULUM,
             User::ROLE_KEPALA_SEKOLAH,
         ]);
     }
 
     public function view(User $user, Question $question): bool
     {
+        if ($user->isKoordinatorKurikulum()) {
+            return true;
+        }
+
         if ($user->isGuru()) {
             return $question->created_by === $user->id
                 || $user->subjects->contains($question->subject_id);
@@ -42,6 +47,7 @@ class QuestionPolicy
             User::ROLE_SUPER_ADMIN,
             User::ROLE_ADMIN,
             User::ROLE_GURU,
+            User::ROLE_KOORDINATOR_KURIKULUM,
         ]);
     }
 
@@ -69,6 +75,7 @@ class QuestionPolicy
             User::ROLE_SUPER_ADMIN,
             User::ROLE_ADMIN,
             User::ROLE_GURU,
+            User::ROLE_KOORDINATOR_KURIKULUM,
         ]);
     }
 }
