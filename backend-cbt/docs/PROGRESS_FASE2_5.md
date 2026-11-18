@@ -58,7 +58,7 @@
 4. Kerjakan fitur apa pun yang diminta di `agent-prompt.md` untuk FASE 3, atau tunggu instruksi user.
 
 ### Cakupan FASE 3 (dari agent-prompt.md, #40+)
-- **#40 CACHE**: Laravel Cache abstraction-based; jangan mengikat logic ke Redis; deployment sekolah pakai infra minimal.
+- **#40 CACHE**: Laravel Cache abstraction-based; jangan mengikat logic ke Redis; deployment cloud shared hosting pakai infra minimal.
 - **#41 SCHEDULER**: Laravel Scheduler untuk backup, cleanup session, maintenance, laporan, housekeeping. Dokumentasikan cron `* * * * * ... php artisan schedule:run`.
 - **#42 BACKUP DATABASE**: backup SQLite aman (saat write aktif) — command `php artisan app:backup-database` + dokumentasi di README.
 - **#43 TESTING**: framework Laravel; pastikan cakupan token (valid/expired/invalid/used/wrong-session), timer (belum mulai/sedang/berakhir), submit, autorisasi, dll.

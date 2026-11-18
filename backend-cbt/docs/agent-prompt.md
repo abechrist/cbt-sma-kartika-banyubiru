@@ -11,10 +11,11 @@ Sekolah memiliki sekitar **±500 siswa** dan jumlah komputer/lab terbatas. Oleh 
 * multi-sesi;
 * bergelombang;
 * dalam satu hari;
-* menggunakan jaringan LAN/WiFi lokal sekolah;
-* dengan satu server lokal sebagai pusat aplikasi.
+* melalui peramban yang terhubung ke internet menuju domain aplikasi.
 
-Sistem harus dirancang sebagai aplikasi yang **reliable dalam kondisi jaringan lokal**, mudah dipasang oleh operator sekolah, mudah di-backup, dan tidak bergantung pada koneksi internet ketika ujian sedang berlangsung.
+Sistem dihosting **terpusat di cloud (Hostinger)** dengan satu basis data, dan diakses dari laboratorium sekolah maupun perangkat siswa. Tidak ada mode server lokal/LAN.
+
+Sistem harus dirancang sebagai aplikasi yang **reliable pada koneksi internet sekolah yang tidak selalu stabil**: auto-save jawaban, resume sesi, dan timer server-side menjaga integritas ujian saat koneksi client terganggu. Aplikasi harus mudah di-backup dan dirawat oleh operator sekolah.
 
 Dokumen requirement lengkap terdapat pada:
 
@@ -85,7 +86,7 @@ Jangan menggunakan:
 
 Database utama harus mendukung dua skenario.
 
-### Development dan deployment sekolah
+### Development lokal
 
 Gunakan:
 
@@ -93,13 +94,21 @@ Gunakan:
 SQLite
 ```
 
-SQLite dipilih karena:
+SQLite dipilih untuk development karena:
 
 * instalasi sangat sederhana;
 * tidak membutuhkan database server terpisah;
-* cocok untuk deployment lokal satu sekolah;
-* mudah di-backup;
-* mudah dipindahkan.
+* mudah di-reset dan diuji.
+
+### Deployment cloud (produksi)
+
+Gunakan:
+
+```text
+MySQL
+```
+
+MySQL tersedia di paket Hostinger dan menjadi basis data produksi tunggal yang diakses seluruh client melalui internet.
 
 ### Future scalability
 
@@ -299,51 +308,44 @@ Struktur storage harus dirancang agar aman dan mudah dibackup.
 
 # 8. DEPLOYMENT TARGET
 
-Target utama adalah:
+Target utama adalah cloud terpusat:
 
 ```text
-1 PC / Server Sekolah
+Hostinger (Cloud)
         │
         └── Laravel Application
-                │
-                ├── SQLite
-                ├── Web Server
-                └── Reverb
+                ├── MySQL
+                ├── Web Server (Apache/Nginx)
+                └── HTTPS
                        │
-                       └── LAN/WiFi
+                       └── Internet
                             │
-                            ├── PC Siswa
-                            ├── PC Proktor
-                            └── PC Admin/Guru
+                            ├── PC Siswa (peramban)
+                            ├── PC Proktor (peramban)
+                            └── PC Admin/Guru (peramban)
 ```
 
-Aplikasi harus dapat berjalan tanpa koneksi internet selama ujian.
+Aplikasi diakses melalui domain HTTPS, misalnya `https://cbtkartika.koomit.com`.
 
-Internet hanya menjadi kebutuhan opsional untuk:
-
-* update aplikasi;
-* backup cloud;
-* sinkronisasi;
-* monitoring jarak jauh;
-* integrasi eksternal.
+Tidak ada server lokal di sekolah. Seluruh client (siswa, proktor, admin/guru) terhubung ke aplikasi cloud melalui internet.
 
 ### Prinsip penting
 
-**Internet outage tidak boleh menghentikan ujian lokal.**
+**Koneksi internet client yang terputus tidak boleh menghilangkan jawaban.** Auto-save, resume sesi, dan timer server-side menjaga integritas ujian. Jika layanan cloud atau internet sekolah terganggu, sediakan prosedur kontingensi operasional (mis. penjadwalan ulang sesi).
 
 ---
 
 # 9. WEB SERVER DAN RUNTIME
 
-Deployment production lokal harus menggunakan:
+Deployment production cloud harus menggunakan:
 
 * PHP 8.3+
 * Laravel 13
-* SQLite
-* web server seperti Apache atau Nginx
-* Laravel Reverb untuk realtime
+* MySQL (basis data produksi di Hostinger)
+* web server seperti Apache atau Nginx dengan HTTPS
+* realtime: opsional. Shared hosting tidak dapat menjalankan Laravel Reverb; gunakan layanan Push (Pusher) atau andalkan refresh berkala pada halaman monitoring.
 
-Development dapat menggunakan:
+Development dapat menggunakan SQLite dan:
 
 ```bash
 php artisan serve
@@ -409,7 +411,7 @@ Alasan:
 * sistem digunakan oleh satu sekolah;
 * deployment harus sederhana;
 * maintenance harus mudah;
-* server sekolah memiliki resource terbatas.
+* shared hosting cloud memiliki resource terbatas.
 
 Namun kode harus tetap dipisahkan berdasarkan domain bisnis.
 
@@ -846,8 +848,8 @@ Laravel 13
 React
 Vite
 Tailwind CSS
-SQLite
-Laravel Reverb
+SQLite (development) / MySQL (production)
+Laravel Reverb (opsional; realtime cloud dapat memakai Push)
 Laravel Sanctum
 ```
 
@@ -1224,7 +1226,7 @@ database queue
 
 sebisa mungkin.
 
-Jangan menjadikan Redis sebagai dependency wajib untuk instalasi sekolah.
+Jangan menjadikan Redis sebagai dependency wajib pada shared hosting.
 
 Redis hanya boleh ditambahkan apabila memang diperlukan berdasarkan kebutuhan performa.
 
@@ -1250,7 +1252,7 @@ Gunakan Laravel Scheduler untuk pekerjaan terjadwal seperti:
 * laporan;
 * housekeeping.
 
-Untuk server sekolah, dokumentasikan cara menjalankan scheduler menggunakan mekanisme OS yang sesuai.
+Untuk server cloud, dokumentasikan cara menjalankan scheduler melalui cron Hostinger (hPanel → Advanced → Cron Jobs).
 
 Contoh Linux:
 
@@ -1262,17 +1264,16 @@ Contoh Linux:
 
 # 42. BACKUP DATABASE
 
-Karena database default menggunakan SQLite, sistem harus menyediakan panduan backup sederhana.
+Database produksi (MySQL di Hostinger) dan database development (SQLite) harus dapat dibackup secara berkala.
 
-Minimal:
+Minimal backup mencakup:
 
 ```text
-database/database.sqlite
+database/database.sqlite   (development)
+dump SQL database produksi (MySQL)
 ```
 
-harus dapat dibackup secara berkala.
-
-Namun backup harus dilakukan dengan aman, terutama ketika terdapat proses write aktif.
+Backup harus dilakukan dengan aman, terutama ketika terdapat proses write aktif.
 
 Sediakan command/script backup melalui Laravel atau script OS yang sesuai.
 
@@ -1746,9 +1747,9 @@ Jangan broadcast jawaban benar atau data sensitif kepada client yang tidak berha
 
 ---
 
-# 58. OFFLINE / NETWORK INTERRUPTION
+# 58. KONEKSI TERPUTUS / NETWORK INTERRUPTION
 
-Sistem harus tahan terhadap gangguan jaringan LAN sementara.
+Sistem harus tahan terhadap gangguan koneksi internet client yang bersifat sementara.
 
 Jika koneksi siswa terputus:
 
@@ -1877,20 +1878,20 @@ Jangan menjalankan development server sebagai production server tanpa pertimbang
 
 ---
 
-# 63. LOCAL SCHOOL INSTALLATION
+# 63. DEPLOYMENT PRODUKSI (CLOUD)
 
 Dokumentasikan skenario:
 
 ```text
-Server PC Sekolah
+Hostinger Cloud
         │
         ├── Laravel
         ├── PHP
-        ├── SQLite
-        └── Reverb
+        ├── MySQL
+        └── HTTPS
               │
               ↓
-        Router / Switch
+           Internet
               │
        ┌──────┼──────┐
        ↓      ↓      ↓
@@ -1900,21 +1901,23 @@ Server PC Sekolah
      PC Proktor
 ```
 
+Rujuk `docs/DEPLOYMENT_HOSTINGER.md` untuk langkah lengkap.
+
 Operator harus dapat memahami:
 
-1. cara menjalankan server;
-2. cara mengecek status server;
-3. cara membuka aplikasi;
-4. cara melakukan backup;
-5. cara restore backup;
-6. cara restart aplikasi;
-7. cara mengecek koneksi LAN.
+1. cara mengakses aplikasi melalui domain;
+2. cara mengecek status layanan;
+3. cara melakukan backup database;
+4. cara restore backup;
+5. cara deploy ulang setelah update;
+6. cara mengecek koneksi internet laboratorium;
+7. cara menghubungi dukungan hosting jika layanan down.
 
 ---
 
-# 64. DEPLOYMENT TANPA INTERNET
+# 64. ASSET TANPA CDN
 
-Setelah aplikasi ter-install dan asset telah dibuild, sistem CBT harus dapat berjalan tanpa internet.
+Asset utama harus dibundel sendiri oleh aplikasi, bukan diambil saat runtime dari layanan pihak ketiga.
 
 Jangan membuat runtime dependency seperti:
 
@@ -1927,7 +1930,7 @@ Google Analytics
 Cloud authentication
 ```
 
-Asset utama harus tersedia secara lokal.
+Asset utama harus tersedia secara lokal (hasil `npm run build`).
 
 ---
 
@@ -1937,9 +1940,9 @@ Target desain:
 
 * puluhan client aktif secara bersamaan;
 * auto-save jawaban dari banyak client;
-* monitoring realtime;
-* SQLite sebagai default database;
-* server lokal dengan resource terbatas.
+* monitoring berkala (realtime opsional);
+* MySQL sebagai database produksi, SQLite untuk development;
+* shared hosting cloud dengan resource terbatas.
 
 Optimalkan:
 
@@ -2008,7 +2011,7 @@ Exam Result
 Admin/Teacher Views Recap
 ```
 
-Semua workflow utama harus berhasil tanpa membutuhkan internet.
+Semua workflow utama harus berhasil di lingkungan produksi cloud, termasuk saat koneksi client terputus sementara (refresh / reconnect / resume).
 
 ---
 
@@ -2023,8 +2026,8 @@ Pada akhir Fase 1 harus tersedia:
 * Vite;
 * Tailwind CSS;
 * Laravel Sanctum;
-* Laravel Reverb;
-* SQLite;
+* Laravel Reverb (opsional, bila realtime tersedia);
+* MySQL (produksi) / SQLite (development);
 * migrations;
 * seeders;
 * factories;
@@ -2095,7 +2098,7 @@ Fase 1 selesai apabila:
 * hasil dapat dilihat;
 * automated test kritis lulus;
 * tidak ada error blocking;
-* aplikasi dapat dijalankan melalui LAN;
+* aplikasi dapat diakses melalui domain HTTPS;
 * dokumentasi instalasi tersedia.
 
 ---
@@ -2159,7 +2162,7 @@ Sebelum menambahkan package baru, evaluasi:
 3. Apakah package aktif dipelihara?
 4. Apakah package kompatibel dengan Laravel 13?
 5. Apakah package kompatibel dengan PHP 8.3+?
-6. Apakah package menambah kompleksitas deployment sekolah?
+6. Apakah package menambah kompleksitas deployment cloud?
 7. Apakah package memiliki risiko security?
 
 Jika tidak diperlukan, jangan tambahkan.
@@ -2326,7 +2329,7 @@ Dalam sistem CBT:
 
 Bangun aplikasi ini dengan prinsip:
 
-> **Laravel 13 sebagai core application framework, SQLite sebagai database default deployment sekolah, React sebagai interactive frontend, Laravel Reverb sebagai realtime layer, dan LAN sebagai lingkungan operasional utama.**
+> **Laravel 13 sebagai core application framework, MySQL sebagai database produksi (SQLite untuk development), React sebagai interactive frontend, Laravel Reverb sebagai realtime layer opsional, dan cloud HTTPS sebagai lingkungan operasional utama.**
 
 Aplikasi harus:
 

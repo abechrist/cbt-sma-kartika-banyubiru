@@ -1,6 +1,6 @@
 # CBT - SMA Kartika III-1 Banyubiru
 
-Sistem Computer-Based Testing (CBT) berbasis web untuk ujian PTS/PAS SMA Kartika III-1 Banyubiru. Dibangun dengan Laravel + Blade + Tailwind CSS, berjalan local-first di jaringan LAN sekolah.
+Sistem Computer-Based Testing (CBT) berbasis web untuk ujian PTS/PAS SMA Kartika III-1 Banyubiru. Dibangun dengan Laravel + Filament + Tailwind CSS, dihosting terpusat di cloud (Hostinger) dan diakses lewat internet melalui peramban. Mode server lokal/LAN sudah tidak digunakan.
 
 ## Fitur Utama
 
@@ -18,7 +18,7 @@ Sistem Computer-Based Testing (CBT) berbasis web untuk ujian PTS/PAS SMA Kartika
 - **Import / Export CSV**: siswa, guru, kelas, soal, peserta, rekap nilai, dan laporan
 - **Audit log & deteksi aktivitas mencurigakan** pada ujian
 - **Kiosk / Lockdown mode**: fullscreen paksa, blokir klik kanan/copy-paste/seleksi, blokir pintasan (F5/Ctrl+R/W/C), kunci tombol kembali, eskalasi pindah tab ke proktor, halaman peluncur kiosk per peserta
-- **Integrasi Dapodik**: impor/ekspor data peserta didik (NISN, nama, JK, TTL, alamat, rombel) via CSV, pencocokan otomatis berdasarkan NISN — sinkronisasi tidak menghambat operasi CBT lokal
+- **Integrasi Dapodik**: impor/ekspor data peserta didik (NISN, nama, JK, TTL, alamat, rombel) via CSV, pencocokan otomatis berdasarkan NISN — sinkronisasi berjalan tanpa mengganggu sesi ujian yang sedang aktif
 - **Background queue (database)**: rekonsiliasi hasil + pembaruan monitoring realtime dijalankan di worker queue (tidak memblokir halaman siswa); gratis tanpa Redis
 
 ## Persyaratan
@@ -38,8 +38,8 @@ composer install
 # 3. Setup file .env
 copy .env.example .env
 #   atur DB_CONNECTION=sqlite atau MySQL
-#   SESSION_DRIVER=file (single server) — untuk bunga pindah-pindah di LAN disarankan database
-#   Sanctum STATE_DOMAIN + APP_URL menunjuk IP server
+#   SESSION_DRIVER=database (disarankan, konsisten lintas perangkat)
+#   Sanctum STATE_DOMAIN + APP_URL menunjuk domain aplikasi (lokal: http://localhost:8000)
 
 # 4. Buat database SQLite & migrate + seed
 touch database\database.sqlite
@@ -79,7 +79,7 @@ php artisan queue:work --sleep=2 --tries=3
 php artisan schedule:work
 ```
 
-Akses `http://<ip-server>:8000` dari semua client di LAN.
+Akses `http://127.0.0.1:8000` di komputer development. Di produksi, aplikasi diakses lewat domain cloud (lihat [Deployment ke Hostinger](#deployment-ke-hostinger-shared-hosting)).
 
 > **Kiosk mode**: jalankan peramban di komputer lab dengan URL ujian + `?kiosk=1`
 > (parameter `--kiosk` pada Chrome/Edge), atau gunakan tombol "Kiosk" per peserta
@@ -187,9 +187,9 @@ buat MySQL di hPanel, upload via File Manager/SSH, set document root ke `public/
 dan catatan khusus (Reverb tidak berfungsi di shared hosting → `BROADCAST_CONNECTION=null`,
 queue `sync`).
 
-Di jaringan sekolah disarankan:
-- Gunakan **database session** agar login siswa konsisten antar device.
-- Batasi akses ke halaman soal (mis. lewat firewall LAN).
+Di lingkungan produksi (cloud) disarankan:
+- Gunakan **database session** agar login siswa konsisten lintas perangkat.
+- Wajib **HTTPS** di seluruh halaman aplikasi.
 - Cadangkan database secara berkala (`php artisan app:backup-database --keep=5` — mendukung SQLite & MySQL).
 
 ## Lisensi

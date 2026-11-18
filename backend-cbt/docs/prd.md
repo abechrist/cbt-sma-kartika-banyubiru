@@ -23,7 +23,7 @@ Dengan jumlah siswa ±500 orang sementara jumlah unit komputer/laboratorium di s
 1. Menyediakan platform ujian digital yang dapat digunakan mandiri oleh sekolah (tanpa bergantung pihak ketiga/Kemendikbud) untuk PH, PTS, PAS, Tryout, dan simulasi AKM/ANBK.
 2. Mengurangi kecurangan melalui pengacakan soal, token ujian per sesi, dan monitoring real-time.
 3. Mempercepat proses koreksi dan rekap nilai (otomatis untuk soal objektif).
-4. Mendukung pelaksanaan ujian dengan jaringan lokal (LAN) mengingat keterbatasan/ketidakstabilan koneksi internet di lokasi sekolah.
+4. Mendukung pelaksanaan ujian berbasis cloud yang dapat diakses dari laboratorium sekolah maupun perangkat siswa, dengan mekanisme penyimpanan jawaban otomatis agar tetap aman saat koneksi internet terganggu.
 5. Memberikan kemudahan bagi guru dalam membuat, mengelola, dan mendistribusikan bank soal.
 6. Menghasilkan laporan hasil ujian yang dapat diakses oleh siswa, guru, wali kelas, dan kepala sekolah.
 
@@ -41,7 +41,7 @@ Dengan jumlah siswa ±500 orang sementara jumlah unit komputer/laboratorium di s
 - Manajemen pengguna dan hak akses (role-based access).
 - Laporan dan rekap nilai (per siswa, per kelas, per mapel).
 - Import/export soal massal (Excel/Word ke sistem).
-- Mode operasi berbasis jaringan lokal (LAN) dengan opsi sinkronisasi ke server pusat/cloud.
+- Mode operasi berbasis cloud terpusat (single database) yang diakses melalui internet.
 
 ### 3.2 Tidak Termasuk dalam Ruang Lingkup (Fase 1)
 - Aplikasi mobile native (Android/iOS) - fase 1 berbasis web responsif saja.
@@ -155,10 +155,10 @@ Dengan jumlah siswa ±500 orang sementara jumlah unit komputer/laboratorium di s
 
 | Kategori | Kebutuhan |
 |---|---|
-| **Performa** | Sistem harus mampu menangani minimal 40-60 siswa mengerjakan ujian secara bersamaan per sesi (menyesuaikan kapasitas lab sekolah), dengan waktu respon halaman < 2 detik pada jaringan LAN lokal. |
+| **Performa** | Sistem harus mampu menangani minimal 40-60 siswa mengerjakan ujian secara bersamaan per sesi (menyesuaikan kapasitas lab sekolah), dengan waktu respon halaman < 2 detik pada koneksi internet standar sekolah. |
 | **Skalabilitas** | Arsitektur mendukung penambahan sesi/gelombang tanpa downtime, serta dapat menangani total ±500 siswa terjadwal dalam beberapa gelombang per hari. |
-| **Ketersediaan (Availability)** | Sistem harus tetap berjalan dalam kondisi internet sekolah terputus, dengan mengandalkan **server lokal (on-premise/LAN)**; sinkronisasi ke cloud dilakukan saat internet tersedia. |
-| **Keamanan** | Enkripsi password, proteksi sesi ujian dari manipulasi client-side, pencegahan akses tidak sah ke bank soal, HTTPS untuk akses (jika ada lapisan internet), token ujian tidak dapat digunakan ulang setelah expired. |
+| **Ketersediaan (Availability)** | Sistem dihosting terpusat di cloud (Hostinger) dengan satu basis data. Ketahanan terhadap gangguan koneksi internet dijaga melalui auto-save jawaban, resume sesi, dan mekanisme rekoneksi; tidak ada mode server lokal/LAN. |
+| **Keamanan** | Enkripsi password, proteksi sesi ujian dari manipulasi client-side, pencegahan akses tidak sah ke bank soal, HTTPS wajib untuk seluruh akses produksi, token ujian tidak dapat digunakan ulang setelah expired. |
 | **Keandalan Data** | Auto-save berkala, mekanisme recovery jika server/komputer client mati mendadak saat listrik padam. |
 | **Kompatibilitas** | Berjalan di browser umum (Chrome, Firefox, Edge) pada spesifikasi komputer lab standar sekolah (low-spec friendly), idealnya juga dapat diinstal sebagai aplikasi client ringan (kiosk mode) di Windows. |
 | **Usability** | Antarmuka sederhana dan intuitif, mengingat pengguna (siswa & guru) memiliki tingkat literasi digital yang beragam. |
@@ -167,13 +167,13 @@ Dengan jumlah siswa ±500 orang sementara jumlah unit komputer/laboratorium di s
 
 ## 8. Kebutuhan Infrastruktur
 
-Mengingat konteks sekolah dengan ±500 siswa dan keterbatasan jumlah komputer/lab serta koneksi internet, arsitektur yang disarankan mengikuti pola umum CBT sekolah di Indonesia:
+Mengingat konteks sekolah dengan ±500 siswa dan keterbatasan jumlah komputer/lab, arsitektur yang digunakan adalah cloud terpusat:
 
-- **Server Lokal (Server Sekolah):** 1 unit PC/server spesifikasi menengah diletakkan di ruang server/lab utama, menjalankan aplikasi CBT (backend + database) yang diakses seluruh client via jaringan LAN/WiFi sekolah.
-- **Client Siswa:** Komputer/laptop lab yang sudah ada, mengakses CBT via browser menuju alamat IP server lokal.
+- **Server Cloud:** Aplikasi CBT (backend + database MySQL) dihosting terpusat pada infrastruktur cloud Hostinger dan diakses melalui domain HTTPS.
+- **Client Siswa:** Komputer/laptop lab yang sudah ada mengakses CBT via peramban menuju domain aplikasi; tidak diperlukan instalasi server lokal di sekolah.
 - **Mode Ujian Bergelombang:** Karena jumlah komputer terbatas (mis. 1-2 lab @ 40 unit), 500 siswa dibagi menjadi beberapa sesi per hari (contoh: 4-6 sesi @ 40-80 siswa).
-- **Sinkronisasi Cloud (opsional, fase lanjutan):** Server lokal dapat melakukan sinkronisasi data hasil ujian ke server cloud/pusat saat koneksi internet tersedia, untuk keperluan backup terpusat atau akses laporan dari luar sekolah.
-- **Genset/UPS:** Rekomendasi non-teknis namun penting - server & minimal jaringan disarankan tersambung UPS untuk mengantisipasi listrik padam saat ujian berlangsung.
+- **Ketahanan Koneksi:** Auto-save jawaban, resume sesi, dan timer server-side menjaga integritas ujian saat koneksi internet client terganggu.
+- **Backup Terpusat:** Backup database harian otomatis di sisi cloud; UPS tetap disarankan untuk perangkat client dan jaringan lokal.
 
 ## 9. Tipe Soal yang Didukung
 
@@ -210,11 +210,11 @@ Entitas utama yang perlu ada dalam basis data sistem:
 
 | Risiko | Mitigasi |
 |---|---|
-| Listrik padam saat ujian berlangsung | Auto-save berkala, UPS pada server, mekanisme resume ujian |
+| Listrik padam saat ujian berlangsung | Auto-save berkala, UPS pada perangkat client/jaringan, mekanisme resume ujian |
 | Jumlah komputer lab tidak mencukupi untuk 500 siswa sekaligus | Skema ujian multi-sesi/gelombang |
 | Siswa membuka tab lain / mencontek | Deteksi pindah tab, kiosk mode/lockdown browser, pengacakan soal |
 | Guru belum terbiasa membuat soal digital | Pelatihan/onboarding, template import Excel yang mudah diisi |
-| Server lokal down saat ujian | Backup server cadangan/rencana kontingensi manual (kertas cadangan) |
+| Gangguan layanan cloud atau koneksi internet sekolah | Status page/monitoring uptime, auto-save & resume sesi, rencana kontingensi manual (kertas cadangan) |
 | Kesalahan input soal oleh guru | Fitur preview soal sebelum ujian dimulai, validasi sebelum publish |
 
 ## 13. Rencana Fase Pengembangan (Roadmap Usulan)
@@ -234,7 +234,7 @@ Entitas utama yang perlu ada dalam basis data sistem:
 - Tipe soal lengkap (menjodohkan, PG kompleks, dsb)
 
 **Fase 3 - Lanjutan (Opsional)**
-- Sinkronisasi cloud/backup terpusat
+- Backup terpusat & disaster recovery
 - Aplikasi client kiosk mode khusus (desktop app)
 - Integrasi dengan Dapodik/data pokok pendidikan
 - Proctoring lanjutan (webcam monitoring)
@@ -242,9 +242,9 @@ Entitas utama yang perlu ada dalam basis data sistem:
 ## 14. Lampiran
 
 ### 14.1 Asumsi
-- Sekolah memiliki minimal 1 laboratorium komputer dengan jaringan LAN/WiFi internal.
+- Sekolah memiliki minimal 1 laboratorium komputer dengan koneksi internet yang memadai.
 - Tersedia minimal 1 orang operator/admin yang bertanggung jawab mengelola sistem.
-- Jaringan internet sekolah tidak selalu stabil, sehingga sistem harus dapat berjalan secara lokal (offline dari internet, online dalam LAN).
+- Koneksi internet sekolah dapat terganggu, sehingga sistem harus memiliki auto-save dan resume sesi; aplikasi tetap dihosting di cloud, bukan server lokal.
 
 ### 14.2 Glosarium
 - **CBT**: Computer Based Test, ujian berbasis komputer.

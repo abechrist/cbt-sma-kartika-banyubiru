@@ -26,7 +26,7 @@ Sistem terpadu satu pintu yang menyelaraskan dokumen silabus RPP Kurikulum Merde
 
 - **Laboratorium Komputer Sekolah**: Digunakan untuk pelaksanaan asesmen serentak terawasi (Sumatif, Penilaian Harian, Ujian Sekolah) dengan autentikasi token dinamis dan monitoring proktor.
 - **Kegiatan Belajar Mengajar (KBM) Mandiri**: Digunakan guru dan siswa baik di kelas reguler maupun secara fleksibel dari rumah untuk modul materi, diskusi interaktif, dan penugasan daring.
-- **Infrastruktur Jaringan**: Dirancang tangguh berjalan pada jaringan intranet lokal (LAN laboratorium sekolah) maupun via cloud tunneling/internet publik secara aman.
+- **Infrastruktur Jaringan**: Dihosting terpusat di cloud (Hostinger) dan diakses melalui internet; tidak memerlukan server lokal/intranet sekolah. Auto-save dan resume sesi menjaga kelangsungan ujian saat koneksi client terganggu.
 
 ## Capabilities and Constraints
 
