@@ -14,7 +14,7 @@ Server target: Hostinger Shared Hosting (paket Premium / Business, PHP 8.3+)
 | Peran | Domain | Isi |
 |---|---|---|
 | **Backend** (Laravel API + Filament admin) | `https://ipcbtkartika.koomit.com` | Seluruh codebase Laravel, document root ke `public/` |
-| **Frontend** (SPA React siswa) | `https://cbtkatika.koomit.com` | Hasil build `frontend/dist/` (statis, tanpa PHP) |
+| **Frontend** (SPA React siswa) | `https://cbtkartika.koomit.com` | Hasil build `frontend/dist/` (statis, tanpa PHP) |
 
 - Frontend SPA memanggil API backend via **Bearer token** (bukan cookie session).
 - Backend mengizinkan origin frontend melalui CORS (`config/cors.php` + `CORS_ALLOWED_ORIGINS` di `.env`).
@@ -255,7 +255,7 @@ Jika `QUEUE_CONNECTION=database` (bukan sync), tambahkan cron kedua:
 
 ---
 
-## 10. Deployment SPA Frontend (React) — `cbtkatika.koomit.com`
+## 10. Deployment SPA Frontend (React) — `cbtkartika.koomit.com`
 
 Bagian ini khusus untuk domain **frontend** yang menghosting SPA React hasil build Vite.
 Backend API tetap mengikuti Bagian 1–9 di atas pada domain `ipcbtkartika.koomit.com`.
@@ -290,10 +290,10 @@ Nilai ini di-bundle ke JS saat `npm run build`, jadi ubah dulu `.env.local` **se
 
 ### b. Upload ke public_html frontend
 
-1. Buat/arahkan `cbtkatika.koomit.com` di hPanel ke folder `public_html` milik frontend.
+1. Buat/arahkan `cbtkartika.koomit.com` di hPanel ke folder `public_html` milik frontend.
 2. Upload **isi** `frontend/dist/` ke `public_html/` (jadi `index.html` berada langsung di `public_html/`).
    ```
-   ~/domains/cbtkatika.koomit.com/public_html/
+   ~/domains/cbtkartika.koomit.com/public_html/
    ├── index.html
    └── assets/
    ```
@@ -314,10 +314,10 @@ Nilai ini di-bundle ke JS saat `npm run build`, jadi ubah dulu `.env.local` **se
 Di `.env` backend (`ipcbtkartika.koomit.com`), pastikan:
 
 ```
-FRONTEND_URL=https://cbtkatika.koomit.com
+FRONTEND_URL=https://cbtkartika.koomit.com
 APP_URL=https://ipcbtkartika.koomit.com
-CORS_ALLOWED_ORIGINS=https://cbtkatika.koomit.com
-SANCTUM_STATEFUL_DOMAINS=https://cbtkatika.koomit.com,https://ipcbtkartika.koomit.com
+CORS_ALLOWED_ORIGINS=https://cbtkartika.koomit.com
+SANCTUM_STATEFUL_DOMAINS=https://cbtkartika.koomit.com,https://ipcbtkartika.koomit.com
 ```
 
 Lalu jalankan:
@@ -332,8 +332,8 @@ php artisan config:clear && php artisan optimize:clear
 ### d. Checklist SPA
 
 - [ ] `frontend/dist/` ter-build dengan `VITE_API_BASE_URL=https://ipcbtkartika.koomit.com/api/v1`
-- [ ] `index.html` + `assets/` terupload di `public_html` domain `cbtkatika.koomit.com`
+- [ ] `index.html` + `assets/` terupload di `public_html` domain `cbtkartika.koomit.com`
 - [ ] `.htaccess` rewrite ke `index.html` siap (untuk router SPA)
-- [ ] SSL aktif untuk kedua domain (`https://cbtkatika.koomit.com` & `https://ipcbtkartika.koomit.com`)
+- [ ] SSL aktif untuk kedua domain (`https://cbtkartika.koomit.com` & `https://ipcbtkartika.koomit.com`)
 - [ ] Backend `.env` berisi `CORS_ALLOWED_ORIGINS` & `SANCTUM_STATEFUL_DOMAINS`
-- [ ] Test di browser: buka `https://cbtkatika.koomit.com/login` → login → dashboard → mulai ujian
+- [ ] Test di browser: buka `https://cbtkartika.koomit.com/login` → login → dashboard → mulai ujian
